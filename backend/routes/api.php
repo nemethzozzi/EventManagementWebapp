@@ -16,7 +16,7 @@ Route::post('/password/forgot', [PasswordResetController::class, 'forgotPassword
 Route::post('/password/reset', [PasswordResetController::class, 'resetPassword']);
 Route::get('/password/reset/{token}', function (string $token, Request $request) {
     $email = $request->query('email', '');
-    $frontend = rtrim(env('FRONTEND_URL', 'http://localhost:5173'), '/');
+    $frontend = rtrim((string) config('app.frontend_url', 'http://localhost:5173'), '/');
 
     return redirect()->away(
         $frontend.'/reset-password/'.$token.'?email='.urlencode($email)

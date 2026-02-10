@@ -6,6 +6,5 @@ parameters:
   paths:
     - app
     - routes
-    - database
   ignoreErrors:
     - '#uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory#'

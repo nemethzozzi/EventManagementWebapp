@@ -116,6 +116,9 @@
 			"assigned": "Hozzárendelve",
 			"pending": "Függőben",
 			"closed": "Lezárt"
+		},
+		"bot_answer": {
+			"not_found": "Sajnálom, nem találtam választ a kérdésedre. Írj 'agent' szót, ha emberi segítséget szeretnél."
 		}
 	}
 

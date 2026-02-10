@@ -7,7 +7,7 @@ export interface Message {
     id: number,
     content: string,
     sender_type: SenderType,
-    sender?: {
+    sender: {
         name: string
     }
     created_at: string,

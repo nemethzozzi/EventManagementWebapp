@@ -2,12 +2,13 @@ import { ref, computed } from 'vue'
 import apiClient from '../api/axios.ts'
 import { useRouter } from 'vue-router'
 import {ROUTES} from "../routes/routes.ts";
+import type {RoleType} from "../types/Role.ts";
 
 interface User {
   id: number
   name: string
   email: string
-  role: 'user' | 'helpdesk_agent' | 'admin' // TODO - backendben enum legyen, itt string union type
+  role: RoleType
 }
 
 const user = ref<User | null>(null)

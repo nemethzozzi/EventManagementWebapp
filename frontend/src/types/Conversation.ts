@@ -3,7 +3,7 @@ import type {Message} from "./Message.ts";
 
 export interface Conversation {
     id: number,
-    user?: {
+    user: {
         name: string,
     }
     status: StatusType,

@@ -172,6 +172,7 @@ const createUser = async () => {
     }
     
     await loadUsers()
+    notify.success(response.data.message_key)
     notify.success('admin.user_created') // TODO backendről jöjjön
   } catch (error: any) {
     console.error(error)
@@ -192,9 +193,9 @@ const updateUserRole = async (userId: number, newRole: string) => {
   try {
     await apiClient.put(`/admin/users/${userId}/role`, { role: newRole })
     await loadUsers()
-  } catch (error) {
+  } catch (error: any) {
     console.error(error)
-    notify.error(error.response?.data?.error_key || 'errors.generic')
+    notify.error(error.response.data.error_key)
   }
 }
 
@@ -210,7 +211,7 @@ const deleteUser = async (userId: number) => {
     await loadUsers()
   } catch (error: any) {
     console.error(error)
-    notify.error(error.response?.data?.error_key || error.response?.data?.error || 'errors.generic')
+    notify.error(error.response.data.error_key)
   }
 }
 

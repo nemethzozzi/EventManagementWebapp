@@ -1,64 +1,91 @@
 <template>
-  <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-header">
-            <h3>{{ $t('reset_password_page.title') }}</h3>
-          </div>
-          <div class="card-body">
-            <form @submit.prevent="handleResetPassword">
-              <div class="mb-3">
-                <label for="email" class="form-label">{{ $t('reset_password_page.email') }}</label>
-                <input
-                  type="email"
-                  class="form-control"
-                  id="email"
-                  v-model="email"
-                  required
-                />
-              </div>
-
-              <div class="mb-3">
-                <label for="password" class="form-label">{{ $t('reset_password_page.password') }}</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="password"
-                  v-model="password"
-                  required
-                  minlength="8"
-                />
-              </div>
-
-              <div class="mb-3">
-                <label for="password_confirmation" class="form-label">{{ $t('reset_password_page.password_confirmation') }}</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="password_confirmation"
-                  v-model="passwordConfirmation"
-                  required
-                />
-              </div>
-              <!-- TODO erre egy komponenst létrehozni loading prop-al --->
-              <button type="submit" class="btn btn-primary w-100" :disabled="loading">
-                {{ loading ? $t('reset_password_page.change_password') : $t('reset_password_page.change_password') }}
-              </button>
-            </form>
-          </div>
+  <div class="reset-page">
+    <Card class="reset-card">
+      <template #title>
+        <div class="title-row">
+          <i class="pi pi-lock" />
+          <span>{{ $t('reset_password_page.title') }}</span>
         </div>
-      </div>
-    </div>
+      </template>
+      <template #content>
+        <form class="form mt-4" @submit.prevent="handleResetPassword">
+          <!-- Email -->
+          <div class="field">
+            <FloatLabel>
+              <InputText
+                  id="email"
+                  v-model.trim="email"
+                  class="w-full"
+                  :invalid="submitted && !isEmailValid"
+                  autocomplete="email"
+              />
+              <label for="email">{{ $t('reset_password_page.email') }}</label>
+            </FloatLabel>
+            <small v-if="submitted && !isEmailValid" class="p-error">
+              {{ $t('validation.invalid_email') ?? 'Adj meg egy érvényes email címet.' }}
+            </small>
+          </div>
+
+          <!-- Password -->
+          <div class="field">
+            <FloatLabel>
+              <Password
+                  inputId="password"
+                  v-model="password"
+                  class="w-full"
+                  toggleMask
+                  :feedback="false"
+                  :invalid="submitted"
+                  autocomplete="new-password"
+              />
+              <label for="password">{{ $t('reset_password_page.password') }}</label>
+            </FloatLabel>
+          </div>
+
+          <!-- Password confirmation -->
+          <div class="field">
+            <FloatLabel>
+              <Password
+                  inputId="password_confirmation"
+                  v-model="passwordConfirmation"
+                  class="w-full"
+                  toggleMask
+                  :feedback="false"
+                  :invalid="submitted && !isPasswordConfirmationValid"
+                  autocomplete="new-password"
+              />
+              <label for="password_confirmation">
+                {{ $t('reset_password_page.password_confirmation') }}
+              </label>
+            </FloatLabel>
+          </div>
+
+          <!-- Submit -->
+          <Button
+              type="submit"
+              class="w-full"
+              :label="$t('reset_password_page.change_password')"
+              :loading="loading"
+              :disabled="loading"
+          />
+        </form>
+      </template>
+    </Card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import Card from 'primevue/card'
+import Button from 'primevue/button'
+import InputText from 'primevue/inputtext'
+import Password from 'primevue/password'
+import FloatLabel from 'primevue/floatlabel'
 import apiClient from '../api/axios'
-import {ROUTES} from "../routes/routes.ts";
-import {notify} from "../lib/notifyBus.ts";
+import { ROUTES } from '../routes/routes'
+import { notify } from '../lib/notifyBus'
+import {isValidEmail} from "../utils/emailValidation.ts";
 
 const route = useRoute()
 const router = useRouter()
@@ -67,9 +94,7 @@ const router = useRouter()
  * Token kiolvasása az url-ből
  */
 const token = ref(route.params.token as string)
-/**
- * Email
- */
+
 const email = ref('')
 /**
  * Új jelszó
@@ -87,9 +112,29 @@ const passwordConfirmation = ref('')
 const loading = ref(false)
 
 /**
- * Új jelszó beállítása
+ * Form submitelve lett-e
  */
+const submitted = ref(false)
+
+/**
+ * Email validáció
+ */
+const isEmailValid = computed(() => isValidEmail(email.value))
+
+/**
+ * Ugyanez-e a jelszó confirm
+ */
+const isPasswordConfirmationValid = computed(() => passwordConfirmation.value === password.value && passwordConfirmation.value.length > 0)
+
+/**
+ * Valid-e a form
+ */
+const isFormValid = computed(() => isEmailValid.value && isPasswordConfirmationValid.value)
+
 const handleResetPassword = async () => {
+  submitted.value = true
+  if (!isFormValid.value) return
+
   loading.value = true
 
   try {
@@ -99,15 +144,76 @@ const handleResetPassword = async () => {
       password: password.value,
       password_confirmation: passwordConfirmation.value,
     })
-    notify.success(response.data?.message_key)
-    setTimeout(() => {
-      router.push(ROUTES.LOGIN)
-    }, 2000)
+
+    notify.success(response.data.message_key)
+    setTimeout(() => router.push(ROUTES.LOGIN), 1200)
   } catch (error: any) {
     console.error(error)
-    notify.error(error.response?.data?.error_key)
+    notify.error(error.response.data.error_key)
   } finally {
     loading.value = false
   }
 }
 </script>
+
+<style scoped>
+.reset-page {
+  min-height: calc(100vh - 40px);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.reset-card {
+  width: 100%;
+  max-width: 520px;
+  border-radius: 18px;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+}
+
+.subtitle {
+  opacity: 0.75;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+/* A PrimeVue Password belső wrapperét is húzzuk full szélességre */
+:deep(.p-password),
+:deep(.p-password-input),
+:deep(.p-inputtext) {
+  width: 100%;
+}
+
+/* A szem ikon (toggleMask) legyen a mező jobb oldalán belül */
+:deep(.p-password) {
+  position: relative;
+}
+
+/* Néhány theme-nél kell, hogy a belső input kapjon helyet az ikon miatt */
+:deep(.p-password-input) {
+  padding-right: 2.5rem;
+}
+
+
+</style>

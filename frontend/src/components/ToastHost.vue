@@ -13,6 +13,7 @@ import {t} from "../lib/i18n.ts";
 const toast = useToast()
 
 const handler = (payload: NotifyKeyPayload) => {
+  // TODO ide még a nyelvi kulcsokat megírni
   const summary = payload.summaryKey
       ? t(payload.summaryKey)
       : t(`toast.summary.${payload.severity}`)

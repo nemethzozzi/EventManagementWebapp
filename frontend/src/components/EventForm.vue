@@ -54,7 +54,7 @@ import {notify} from "../lib/notifyBus.ts";
 const emit = defineEmits(['event-created'])
 
 /**
- * Form - TODO az összes helyen lehetne így, ahol form van
+ * Form
  */
 const form = ref({
   title: '',
@@ -82,10 +82,10 @@ const createEvent = async () => {
       occurs_at: '',
       description: '',
     }
-    notify.success(response.data?.message_key)
+    notify.success(response.data.message_key)
   } catch (error: any) {
     console.error(error)
-    notify.error(error.response?.data?.error_key)
+    notify.error(error.response.data.error_key)
   } finally {
     loading.value = false
   }

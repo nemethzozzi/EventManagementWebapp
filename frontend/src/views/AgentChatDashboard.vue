@@ -16,16 +16,18 @@
       </div>
 
       <!-- Beszélgetés ablak -->
-      <div class="col-md-8">
-        <ChatPanel
-            v-if="selectedConversationId"
-            :conversationId="selectedConversationId"
-            :mode=ROLE.HELPDESK_AGENT
-            @closed="onClosed"
-        />
+      <div class="col-md-8 d-flex mb-4">
+        <div class="chat-shell flex-grow-1 d-flex flex-column">
+          <ChatPanel
+              v-if="selectedConversationId"
+              :conversationId="selectedConversationId"
+              :mode="ROLE.HELPDESK_AGENT"
+              @closed="onClosed"
+          />
 
-        <div v-else class="alert alert-info">
-          {{ $t('agent_dashboard.choose_conversation')}}
+          <div v-else class="alert alert-info m-0">
+            {{ $t('agent_dashboard.choose_conversation') }}
+          </div>
         </div>
       </div>
     </div>
@@ -66,7 +68,7 @@ const loadConversations = async () => {
     const response = await apiClient.get('/chat/conversations')
     conversations.value = response.data
   } catch (error: any) {
-    notify.error(error.response?.data?.error_key)
+    notify.error(error.response.data.error_key)
     console.error(error)
   } finally {
     loading.value = false
@@ -96,3 +98,12 @@ onMounted(() => {
 
 
 </script>
+
+<style>
+
+.chat-shell{
+  height: calc(100vh - 140px);
+  min-height: 0;
+}
+
+</style>

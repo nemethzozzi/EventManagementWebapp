@@ -21,14 +21,14 @@ class ChatService
     {
         // Conversation lekérése vagy létrehozása
         $conversation = Conversation::where('user_id', $userId)
-            ->where('status', '!=', 'closed')
+            ->where('status', '!=', Conversation::STATUS_CLOSED)
             ->latest('updated_at')
             ->first();
 
         if (!$conversation) {
             $conversation = Conversation::create([
                 'user_id' => $userId,
-                'status' => 'bot', // indulhat bottal, ahogy eddig
+                'status' => Conversation::STATUS_BOT, // indulhat bottal, ahogy eddig
                 'handoff_requested' => false,
             ]);
         }
@@ -36,13 +36,17 @@ class ChatService
         // User üzenet mentése
         $userMessage = Message::create([
             'conversation_id' => $conversation->id,
-            'sender_type' => 'user',
+            'sender_type' => Message::SENDER_USER,
             'sender_id' => $userId,
             'content' => $content,
         ]);
 
         // Broadcasting: user üzenet
-        broadcast(new MessageSent($userMessage));
+        broadcast(new MessageSent($userMessage))->toOthers();
+
+        if ($conversation->handoff_requested || $conversation->status !== Conversation::STATUS_BOT) {
+            return $conversation->fresh()->load('messages.sender');
+        }
 
         // Bot válasz generálása
         $botResponse = $this->botService->generateResponse($content);
@@ -51,13 +55,12 @@ class ChatService
             // Handoff szükséges
             $conversation->update([
                 'handoff_requested' => true,
-                'status' => 'open',
+                'status' => Conversation::STATUS_OPEN,
             ]);
 
-            // TODO nyelvi kulcsokat és konstansokat haszánlni
             $botMessage = Message::create([
                 'conversation_id' => $conversation->id,
-                'sender_type' => 'bot',
+                'sender_type' => Message::SENDER_BOT,
                 'sender_id' => null,
                 'content' => 'Átirányítom egy ügyintézőhöz. Kérlek, várj egy kicsit.',
             ]);
@@ -67,7 +70,7 @@ class ChatService
             // Bot válasz
             $botMessage = Message::create([
                 'conversation_id' => $conversation->id,
-                'sender_type' => 'bot',
+                'sender_type' => Message::SENDER_BOT,
                 'sender_id' => null,
                 'content' => $botResponse,
             ]);
@@ -89,13 +92,13 @@ class ChatService
         if (!$conversation->assigned_agent_id) {
             $conversation->update([
                 'assigned_agent_id' => $agentId,
-                'status' => 'pending',
+                'status' => Conversation::STATUS_PENDING,
             ]);
         }
 
         $agentMessage = Message::create([
             'conversation_id' => $conversationId,
-            'sender_type' => 'agent',
+            'sender_type' => Message::SENDER_AGENT,
             'sender_id' => $agentId,
             'content' => $content,
         ]);

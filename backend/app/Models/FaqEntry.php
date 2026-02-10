@@ -10,7 +10,7 @@ class FaqEntry extends Model
 
     /**
      * Oszlopok
-     * 
+     *
      * @var array
      */
     protected $fillable = [

@@ -11,7 +11,6 @@ type ConfirmState = {
     resolve?: (value: boolean) => void
 }
 
-// TODO ezt még átnézni
 const state = reactive<ConfirmState>({
     visible: false,
     title: '',

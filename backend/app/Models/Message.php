@@ -9,6 +9,10 @@ class Message extends Model
 {
     use HasFactory;
 
+    public const SENDER_USER = 'user';
+    public const SENDER_AGENT = 'agent';
+    public const SENDER_BOT = 'bot';
+
     /**
      * Oszlopok
      *

@@ -34,7 +34,7 @@ const loadEvents = async () => {
     const response = await apiClient.get(ROUTES.EVENTS)
     events.value = response.data
   } catch (error: any) {
-    notify.error(error.response?.data?.error_key)
+    notify.error(error.response.data.error_key)
     console.error(error)
   } finally {
     loading.value = false

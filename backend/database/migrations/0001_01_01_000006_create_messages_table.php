@@ -1,4 +1,6 @@
 <?php
+
+use App\Models\Message;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,7 +12,7 @@ return new class extends Migration
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
             $table->foreignId('conversation_id')->constrained()->onDelete('cascade');
-            $table->enum('sender_type', ['user', 'bot', 'agent']);
+            $table->enum('sender_type', [Message::SENDER_USER, Message::SENDER_BOT, Message::SENDER_AGENT]);
             $table->foreignId('sender_id')->nullable()->constrained('users')->onDelete('set null');
             $table->text('content');
             $table->timestamps();

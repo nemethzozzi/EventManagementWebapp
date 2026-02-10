@@ -81,7 +81,7 @@ const editingId = ref<number | null>(null)
 const editDescription = ref('')
 
 /**
- * Dátum formázása - TODO ezt kiszervezni egy helperbe
+ * Dátum formázása
  *
  * @param dateString
  */
@@ -119,10 +119,10 @@ const saveEdit = async (eventId: number) => {
     })
     
     cancelEdit()
-    notify.success(response.data?.message_key)
+    notify.success(response.data.message_key)
   } catch (error: any) {
     console.error(error)
-    notify.error(error.response?.data?.error_key)
+    notify.error(error.response.data.error_key)
   }
 }
 
@@ -144,10 +144,10 @@ const deleteEvent = async (eventId: number) => {
 
   try {
     const response = await apiClient.delete(`/events/${eventId}`)
-    notify.success(response.data?.message_key)
+    notify.success(response.data.message_key)
   } catch (error: any) {
     console.error(error)
-    notify.error(error.response?.data?.error_key)
+    notify.error(error.response.data.error_key)
   }
 }
 </script>

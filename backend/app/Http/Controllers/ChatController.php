@@ -46,14 +46,15 @@ class ChatController extends Controller
     private function getOrCreateActiveConversation(int $userId): Conversation
     {
         $conversation = Conversation::where('user_id', $userId)
-            ->whereIn('status', ['open', 'pending', 'assigned'])
+            ->whereIn('status', [Conversation::STATUS_OPEN, Conversation::STATUS_PENDING, Conversation::STATUS_ASSIGNED])
             ->latest('updated_at')
             ->first();
 
         if (!$conversation) {
             $conversation = Conversation::create([
                 'user_id' => $userId,
-                'status' => 'open',
+                'status' => Conversation::STATUS_BOT,
+                'handoff_requested' => false,
             ]);
         }
 
@@ -80,7 +81,7 @@ class ChatController extends Controller
         $conversations = Conversation::with(['user', 'messages' => function($q) {
             $q->latest()->limit(1);
         }])
-        ->whereIn('status', ['open', 'pending'])
+        ->whereIn('status', [Conversation::STATUS_OPEN, Conversation::STATUS_PENDING])
         ->orWhere('handoff_requested', true)
         ->orderBy('updated_at', 'desc')
         ->get();
@@ -125,7 +126,7 @@ class ChatController extends Controller
     public function closeConversation($conversationId)
     {
         $conversation = Conversation::findOrFail($conversationId);
-        $conversation->update(['status' => 'closed']);
+        $conversation->update(['status' => Conversation::STATUS_CLOSED]);
 
         return response()->json(['message' => 'Conversation closed']);
     }

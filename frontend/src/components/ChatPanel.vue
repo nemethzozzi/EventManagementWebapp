@@ -1,6 +1,6 @@
 <template>
   <div class="chat-panel">
-    <div class="chat-top" v-if="props.mode === ROLE.HELPDESK_AGENT">
+    <div class="chat-top" v-if="props.mode === ROLE.HELPDESK_AGENT && !loading">
       <div class="title">
         <i class="pi pi-user"></i>
         <span>{{ conversation?.user?.name ?? '—' }}</span>
@@ -31,6 +31,8 @@
             v-for="m in conversation?.messages ?? []"
             :key="m.id"
             :message="m"
+            :currentRole="props.mode"
+            :userName="conversation?.user?.name ?? ''"
         />
       </template>
     </div>
@@ -68,6 +70,8 @@ import ProgressSpinner from "primevue/progressspinner";
 import type {Conversation} from "../types/Conversation.ts";
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
+import {STATUS} from "../types/Status.ts";
+import {SENDER} from "../types/Sender.ts";
 
 
 const props = defineProps({
@@ -115,7 +119,7 @@ const chatContainer = ref<HTMLElement | null>(null)
 /**
  * Le van-e zárva
  */
-const isClosed = computed(() => conversation.value?.status === 'closed')
+const isClosed = computed(() => conversation.value?.status === STATUS.CLOSED)
 
 /**
  * Scrollozás az aljára
@@ -164,7 +168,7 @@ const loadConversation = async () => {
 
     // ha mégis null lenne
     if (!conversation.value) {
-      conversation.value = { id: -1, status: 'open', messages: [] } as any
+      conversation.value = { id: -1, status: STATUS.OPEN, messages: [] } as any
     }
 
     await nextTick()
@@ -188,20 +192,6 @@ const sendMessage = async () => {
             : endpoints.value.send()
 
     await apiClient.post(url, { content: message.value })
-
-    // azonnal jelenjen meg nálam is:
-    if (conversation.value) {
-      conversation.value.messages.push({
-        id: Date.now(), // temp
-        content: message.value,
-        sender_type: 'user',
-        sender_id: null,
-        created_at: new Date().toISOString(),
-      } as any)
-      await nextTick()
-      scrollToBottom()
-    }
-
     message.value = ''
 
   } finally {
@@ -258,8 +248,7 @@ watch(
 watch(
     () => conversation.value?.status,
     async (s) => {
-      console.log(s)
-      if (props.mode === ROLE.USER && s === 'closed') {
+      if (props.mode === ROLE.USER && s === STATUS.CLOSED) {
         await loadConversation()
       }
     }
@@ -280,18 +269,14 @@ onUnmounted(() => {
 
 <style scoped>
 .chat-panel {
-  flex: 1;
+  height: 100%;
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
-
 .chat-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex: 0 0 auto;
 }
 
 .chat-top .title {
@@ -302,7 +287,7 @@ onUnmounted(() => {
 }
 
 .chat-body {
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   padding: 8px;
@@ -311,6 +296,7 @@ onUnmounted(() => {
 }
 
 .chat-footer {
+  flex: 0 0 auto;
   padding-top: 6px;
 }
 

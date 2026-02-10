@@ -12,7 +12,7 @@ export function getLocale(): LocalType {
 }
 
 /**
- * Nyelv beállítása - TODO ide is lehetnének nyelv konstansok
+ * Nyelv beállítása
  *
  * @param locale
  */

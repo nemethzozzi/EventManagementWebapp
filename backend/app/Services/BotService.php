@@ -7,6 +7,7 @@ class BotService
 {
     /**
      * Bot válasz generálása kulcsszavak alapján
+     *
      * @param string $message
      * @return string|null
      */
@@ -19,9 +20,7 @@ class BotService
             return null; // Nincs bot válasz, human kell
         }
 
-        // FAQ keresés
-        $faqs = FaqEntry::all();
-        foreach ($faqs as $faq) {
+        foreach (FaqEntry::all() as $faq) {
             $keywords = array_map('trim', explode(',', strtolower($faq->keywords)));
             foreach ($keywords as $keyword) {
                 if (strpos($messageLower, $keyword) !== false) {

@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordResetController;
@@ -12,6 +13,14 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/password/forgot', [PasswordResetController::class, 'forgotPassword'])
     ->middleware('throttle:5,1'); // Rate limit: 5 kérés / perc
 Route::post('/password/reset', [PasswordResetController::class, 'resetPassword']);
+Route::get('/password/reset/{token}', function (string $token, Request $request) {
+    $email = $request->query('email', '');
+    $frontend = rtrim(env('FRONTEND_URL', 'http://localhost:5173'), '/');
+
+    return redirect()->away(
+        $frontend . '/reset-password/' . $token . '?email=' . urlencode($email)
+    );
+})->name('password.reset');
 
 // Protected routes (JWT required)
 Route::middleware('auth:api')->group(function () {

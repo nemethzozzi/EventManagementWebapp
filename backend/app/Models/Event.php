@@ -13,7 +13,7 @@ class Event extends Model
     /**
      * Oszlopok
      *
-     * @var array
+     * @var list<string>
      */
     protected $fillable = [
         'user_id',
@@ -25,7 +25,7 @@ class Event extends Model
     /**
      * Típus castolások
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'occurs_at' => 'datetime',
@@ -34,7 +34,7 @@ class Event extends Model
     /**
      * Felhasználó reláció
      *
-     * @return BelongsTo<User, Event>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {

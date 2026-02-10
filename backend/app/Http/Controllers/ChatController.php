@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ChatController extends Controller
 {
-    protected $chatService;
+    protected ChatService $chatService;
 
     public function __construct(ChatService $chatService)
     {
@@ -45,6 +45,9 @@ class ChatController extends Controller
         return response()->json($conversation);
     }
 
+    /**
+     * Beszélgetés lekérdezése vagy létrehozása
+     */
     private function getOrCreateActiveConversation(int $userId): Conversation
     {
         $conversation = Conversation::where('user_id', $userId)
@@ -65,6 +68,8 @@ class ChatController extends Controller
 
     /**
      * User saját beszélgetésének lekérése
+     *
+     * @return JsonResponse
      */
     public function getConversation()
     {
@@ -77,6 +82,8 @@ class ChatController extends Controller
 
     /**
      * Agent: összes beszélgetés listázása
+     *
+     * @return JsonResponse
      */
     public function listConversations()
     {
@@ -92,9 +99,11 @@ class ChatController extends Controller
     }
 
     /**
-     * Agent: beszélgetés részleteinek lekérése
+     * Adott beszélgetés lekérése
+     *
+     * @return JsonResponse
      */
-    public function getConversationById($id)
+    public function getConversationById(int $id)
     {
         $conversation = Conversation::with(['user', 'messages.sender'])->findOrFail($id);
 
@@ -103,8 +112,10 @@ class ChatController extends Controller
 
     /**
      * Agent: üzenet küldése
+     *
+     * @return JsonResponse
      */
-    public function sendAgentMessage(Request $request, $conversationId)
+    public function sendAgentMessage(Request $request, int $conversationId)
     {
         $validator = Validator::make($request->all(), [
             'content' => 'required|string|max:1000',
@@ -128,8 +139,10 @@ class ChatController extends Controller
 
     /**
      * Agent: beszélgetés lezárása
+     *
+     * @return JsonResponse
      */
-    public function closeConversation($conversationId)
+    public function closeConversation(int $conversationId)
     {
         $conversation = Conversation::findOrFail($conversationId);
         $conversation->update(['status' => Conversation::STATUS_CLOSED]);

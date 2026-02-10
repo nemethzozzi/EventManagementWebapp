@@ -21,7 +21,7 @@ class BotService
         foreach (FaqEntry::all() as $faq) {
             $keywords = array_map('trim', explode(',', strtolower($faq->keywords)));
             foreach ($keywords as $keyword) {
-                if (strpos($messageLower, $keyword) !== false) {
+                if (str_contains($messageLower, $keyword)) {
                     return $faq->answer;
                 }
             }
@@ -38,7 +38,7 @@ class BotService
     {
         $handoffKeywords = ['agent', 'human', 'ember', 'ügyintéző', 'support'];
         foreach ($handoffKeywords as $keyword) {
-            if (strpos($message, $keyword) !== false) {
+            if (str_contains($message, $keyword)) {
                 return true;
             }
         }

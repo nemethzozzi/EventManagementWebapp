@@ -1,5 +1,11 @@
+includes:
+  - vendor/nunomaduro/larastan/extension.neon
+
 parameters:
+  level: 6
   paths:
     - app
     - routes
     - database
+  ignoreErrors:
+    - '#uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory#'

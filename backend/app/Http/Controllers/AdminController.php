@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -11,6 +12,8 @@ class AdminController extends Controller
 {
     /**
      * Felhasználók listázása
+     *
+     * @return JsonResponse
      */
     public function listUsers()
     {
@@ -21,6 +24,8 @@ class AdminController extends Controller
 
     /**
      * Új felhasználó létrehozása
+     *
+     * @return JsonResponse
      */
     public function createUser(Request $request)
     {
@@ -54,8 +59,10 @@ class AdminController extends Controller
 
     /**
      * Felhasználó role módosítása
+     *
+     * @return JsonResponse
      */
-    public function updateUserRole(Request $request, $userId)
+    public function updateUserRole(Request $request, int $userId)
     {
         $validator = Validator::make($request->all(), [
             'role' => 'required|in:user,helpdesk_agent,admin',
@@ -73,8 +80,10 @@ class AdminController extends Controller
 
     /**
      * Felhasználó törlése
+     *
+     * @return JsonResponse
      */
-    public function deleteUser($userId)
+    public function deleteUser(int $userId)
     {
         $user = User::findOrFail($userId);
 

@@ -19,7 +19,7 @@ class Message extends Model
     /**
      * Oszlopok
      *
-     * @var array
+     * @var list<string>
      */
     protected $fillable = [
         'conversation_id',
@@ -31,7 +31,7 @@ class Message extends Model
     /**
      * Beszélgetések reláció
      *
-     * @return BelongsTo<Conversation, Message>
+     * @return BelongsTo<Conversation, $this>
      */
     public function conversation(): BelongsTo
     {
@@ -41,7 +41,7 @@ class Message extends Model
     /**
      * Felhasználó reláció
      *
-     * @return BelongsTo<User, Message>
+     * @return BelongsTo<User, $this>
      */
     public function sender(): BelongsTo
     {

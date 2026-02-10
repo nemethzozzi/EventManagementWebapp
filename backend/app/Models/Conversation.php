@@ -24,7 +24,7 @@ class Conversation extends Model
     /**
      * Oszlopok
      *
-     * @var array
+     * @var list<string>
      */
     protected $fillable = [
         'user_id',
@@ -36,7 +36,7 @@ class Conversation extends Model
     /**
      * Típus castolások
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'handoff_requested' => 'boolean',
@@ -45,7 +45,7 @@ class Conversation extends Model
     /**
      * Felhasználó reláció
      *
-     * @return BelongsTo<User, Conversation>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {
@@ -55,7 +55,7 @@ class Conversation extends Model
     /**
      * Hozzárendelt agent reláció
      *
-     * @return BelongsTo<User, Conversation>
+     * @return BelongsTo<User, $this>
      */
     public function assignedAgent(): BelongsTo
     {
@@ -65,7 +65,7 @@ class Conversation extends Model
     /**
      * Üzenetek reláció
      *
-     * @return HasMany<Message, Conversation>
+     * @return HasMany<Message, $this>
      */
     public function messages(): HasMany
     {

@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Models\Event;
+use Illuminate\Http\JsonResponse;
 
 class EventController extends Controller
 {
     /**
-     * User saját eventjeinek listázása
+     * User saját eseményei listázása
+     *
+     * @return JsonResponse
      */
     public function index()
     {
@@ -19,7 +22,9 @@ class EventController extends Controller
     }
 
     /**
-     * Új event létrehozása
+     * Új esemény létrehozása
+     *
+     * @return JsonResponse
      */
     public function store(StoreEventRequest $request)
     {
@@ -32,7 +37,9 @@ class EventController extends Controller
     }
 
     /**
-     * Egy adott event megjelenítése
+     * Egy adott esemény létrehozása
+     *
+     * @return JsonResponse
      */
     public function show(Event $event)
     {
@@ -42,7 +49,9 @@ class EventController extends Controller
     }
 
     /**
-     * Event frissítése (csak description)
+     * Esemény frissítése (csak description)
+     *
+     * @return JsonResponse
      */
     public function update(UpdateEventRequest $request, Event $event)
     {
@@ -56,7 +65,9 @@ class EventController extends Controller
     }
 
     /**
-     * Event törlése
+     * Esemény törlése
+     *
+     * @return JsonResponse
      */
     public function destroy(Event $event)
     {

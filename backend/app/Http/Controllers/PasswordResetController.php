@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -13,6 +14,8 @@ class PasswordResetController extends Controller
 {
     /**
      * Jelszó reset link küldése emailben
+     *
+     * @return JsonResponse
      */
     public function forgotPassword(Request $request)
     {
@@ -43,6 +46,8 @@ class PasswordResetController extends Controller
 
     /**
      * Jelszó reset végrehajtása
+     *
+     * @return JsonResponse
      */
     public function resetPassword(Request $request)
     {

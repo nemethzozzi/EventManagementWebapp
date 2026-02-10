@@ -8,7 +8,7 @@ use App\Models\Message;
 
 class ChatService
 {
-    protected $botService;
+    protected BotService $botService;
 
     public function __construct(BotService $botService)
     {
@@ -18,7 +18,7 @@ class ChatService
     /**
      * User üzenet elküldése és bot/handoff feldolgozás
      */
-    public function sendUserMessage(int $userId, string $content)
+    public function sendUserMessage(int $userId, string $content): mixed
     {
         // Conversation lekérése vagy létrehozása
         $conversation = Conversation::where('user_id', $userId)
@@ -85,7 +85,7 @@ class ChatService
     /**
      * Agent üzenet küldése
      */
-    public function sendAgentMessage(int $agentId, int $conversationId, string $content)
+    public function sendAgentMessage(int $agentId, int $conversationId, string $content): mixed
     {
         $conversation = Conversation::findOrFail($conversationId);
 

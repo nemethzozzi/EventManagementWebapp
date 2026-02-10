@@ -13,7 +13,7 @@ class MessageSent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $message;
+    public Message $message;
 
     public function __construct(Message $message)
     {
@@ -23,7 +23,7 @@ class MessageSent implements ShouldBroadcastNow
     /**
      * Broadcasting csatorna
      */
-    public function broadcastOn()
+    public function broadcastOn(): Channel
     {
         return new Channel('conversation.'.$this->message->conversation_id);
     }
@@ -31,7 +31,7 @@ class MessageSent implements ShouldBroadcastNow
     /**
      * Broadcast esemény neve
      */
-    public function broadcastAs()
+    public function broadcastAs(): string
     {
         return 'message.sent';
     }

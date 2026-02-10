@@ -147,6 +147,8 @@
       <path value="$PROJECT_DIR$/backend/vendor/react/stream" />
       <path value="$PROJECT_DIR$/backend/vendor/laravel/reverb" />
       <path value="$PROJECT_DIR$/backend/vendor/phpstan/phpstan" />
+      <path value="$PROJECT_DIR$/backend/vendor/iamcal/sql-parser" />
+      <path value="$PROJECT_DIR$/backend/vendor/nunomaduro/larastan" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">

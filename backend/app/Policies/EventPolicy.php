@@ -16,7 +16,7 @@ class EventPolicy
     }
 
     /**
-     * User csak saját eventjét frissítheti
+     * Felhasználó csak saját eseményét frissítheti
      */
     public function update(User $user, Event $event): bool
     {
@@ -24,7 +24,7 @@ class EventPolicy
     }
 
     /**
-     * User csak saját eventjét törölheti
+     * Felhasználó csak saját eseményét törölheti
      */
     public function delete(User $user, Event $event): bool
     {

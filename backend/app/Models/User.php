@@ -57,15 +57,18 @@ class User extends Authenticatable implements JWTSubject
         return $this->getKey();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getJWTCustomClaims(): array
     {
         return [];
     }
 
     /**
-     * Evenet relációk
+     * Esemény relációk
      *
-     * @return HasMany<Event, User>
+     * @return HasMany<Event, $this>
      */
     public function events(): HasMany
     {
@@ -73,9 +76,9 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Beszélgetések relációk
+     * Beszélgetés relációk
      *
-     * @return HasMany<Conversation, User>
+     * @return HasMany<Conversation, $this>
      */
     public function conversations(): HasMany
     {
@@ -85,7 +88,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * Hozzárendelt beszélgetés reláció
      *
-     * @return HasMany<Conversation, User>
+     * @return HasMany<Conversation, $this>
      */
     public function assignedConversations(): HasMany
     {

@@ -12,7 +12,7 @@ class FaqEntry extends Model
     /**
      * Oszlopok
      *
-     * @var array
+     * @var list<string>
      */
     protected $fillable = [
         'keywords',

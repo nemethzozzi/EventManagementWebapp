@@ -1,0 +1,122 @@
+{
+	"login_page": {
+		"title": "Bejelentkezés",
+		"email": "Email",
+		"password": "Jelszó",
+		"login": "Bejelentkezés",
+		"forgot_password": "Elfelejtette a jelszavát?",
+		"demo_accounts": "Demo accountok"
+	},
+	"axios": {
+		"error": {
+			"server_unavailable": "Hálózati hiba",
+			"expired_session": "Lejárt munkamenet. Jelentkezz be újra",
+			"forbidden": "Nincs hozzá jogosultásgod",
+			"server_error": "Szerver hiba"
+		}
+	},
+	"admin_users_page": {
+		"users_management": "Felhasználók kezelése",
+		"new_user": "Új felhasználó létrehozása",
+		"name": "Név",
+		"email": "Email",
+		"password": "Jelszó",
+		"creating": "Létrehozás...",
+		"create": "Létrehozás",
+		"table": {
+			"title": "Felhasználók",
+			"name": "Név",
+			"email": "Email",
+			"role": "Szerepkör",
+			"actions": "Műveletek"
+		},
+		"button": {
+			"delete": "Törlés",
+			"back": "Vissza"
+		}
+	},
+	"events_page": {
+		"title": "Eseményeim"
+	},
+	"forgot_password_page": {
+		"title": "Elfelejtett jelszó",
+		"email": "Email",
+		"send_email": "Reset link küldése",
+		"login": "Vissza a bejelentkezéshez"
+	},
+	"reset_password_page": {
+		"title": "Új jelszó beállítása",
+		"email": "Email",
+		"password": "Jelszó",
+		"password_confirmation": "Jelszó megerősítése",
+		"change_password": "Jelszó módosítása"
+	},
+	"events_list": {
+		"my_events": "Eseményeim listája",
+		"no_events": "Még nincs eseményed",
+		"time": "Időpont",
+		"description": "Leírás",
+		"no_description": "Nincs leírás",
+		"button": {
+			"save": "Mentés",
+			"cancel": "Mégse",
+			"edit_description": "Leírás szerkesztése",
+			"delete": "Törlés"
+		},
+		"popup": {
+			"title": "Törlés megerősítése",
+			"message": "Biztos törölni akarod az eseményt?",
+			"delete": "Törlés",
+			"cancel": "Mégse"
+		}
+	},
+	"events_form": {
+		"new_event": "Új esemény létrehozása",
+		"title": "Cím",
+		"time": "Időpont",
+		"description": "Leírás",
+		"creating": "Létrehozás...",
+		"create_event": "Esemény létrehozása"
+	},
+	"nav": {
+		"agent_dashboard": "Agent Dashboard",
+		"admin": "Admin",
+		"logout": "Kijelentkezés",
+		"lang": {
+			"hu": "Magyar",
+			"en": "English"
+		}
+	},
+	"not_found": {
+		"title": "Az oldal nem található",
+		"text": "A keresett oldal nem létezik vagy áthelyezték.",
+		"go_home": "Vissza a főoldalra"
+	},
+	"agent_dashboard": {
+		"title": "Agent Dashboard",
+		"choose_conversation": "Válassz egy beszélgetést a bal oldalon",
+		"conversations": {
+			"title": "Aktív beszélgetések",
+			"empty": "Nincs aktív beszélgetés",
+			"status_label": "Státusz:"
+		}
+	},
+	"chat": {
+		"agent": "Ügyintéző",
+		"bot": "Bot",
+		"placeholder": "Üzenet küldése...",
+		"send": "Küldés",
+		"start_message": "Beszélgetés kezdése",
+		"title": "Beszélgetés",
+		"you": "Te",
+		"close": "Beszélgetés lezárása",
+		"closed": "A beszélgetés le van zárva",
+		"status": {
+			"open": "Nyitott",
+			"assigned": "Hozzárendelve",
+			"pending": "Függőben",
+			"closed": "Lezárt"
+		}
+	}
+
+}

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Events;
 
 use App\Models\Message;
@@ -24,7 +25,7 @@ class MessageSent implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new Channel('conversation.' . $this->message->conversation_id);
+        return new Channel('conversation.'.$this->message->conversation_id);
     }
 
     /**

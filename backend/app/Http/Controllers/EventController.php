@@ -1,10 +1,10 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Models\Event;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
-use Illuminate\Http\Request;
+use App\Models\Event;
 
 class EventController extends Controller
 {
@@ -14,6 +14,7 @@ class EventController extends Controller
     public function index()
     {
         $events = auth('api')->user()->events()->orderBy('occurs_at', 'asc')->get();
+
         return response()->json($events);
     }
 
@@ -23,7 +24,11 @@ class EventController extends Controller
     public function store(StoreEventRequest $request)
     {
         $event = auth('api')->user()->events()->create($request->validated());
-        return response()->json($event, 201);
+
+        return response()->json([
+            'message_key' => 'events_page.response.success.event.created',
+            'event' => $event,
+        ], 201);
     }
 
     /**
@@ -32,6 +37,7 @@ class EventController extends Controller
     public function show(Event $event)
     {
         $this->authorize('view', $event);
+
         return response()->json($event);
     }
 
@@ -42,7 +48,11 @@ class EventController extends Controller
     {
         $this->authorize('update', $event);
         $event->update($request->validated());
-        return response()->json($event);
+
+        return response()->json([
+            'message_key' => 'events_page.response.success.event.updated',
+            'event' => $event->fresh(),
+        ]);
     }
 
     /**
@@ -52,6 +62,9 @@ class EventController extends Controller
     {
         $this->authorize('delete', $event);
         $event->delete();
-        return response()->json(['message' => 'Event deleted successfully']);
+
+        return response()->json([
+            'message_key' => 'events_page.response.success.event.deleted',
+        ]);
     }
 }

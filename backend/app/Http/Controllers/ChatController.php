@@ -1,11 +1,12 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Models\Conversation;
 use App\Services\ChatService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Conversation;
 
 class ChatController extends Controller
 {
@@ -19,7 +20,6 @@ class ChatController extends Controller
     /**
      * Üzenet küldése
      *
-     * @param Request $request
      * @return JsonResponse
      */
     public function sendMessage(Request $request)
@@ -29,7 +29,10 @@ class ChatController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'error_key' => 'chat.response.error.validation_failed',
+                'errors' => $validator->errors(),
+            ], 422);
         }
 
         $userId = auth('api')->id();
@@ -42,7 +45,6 @@ class ChatController extends Controller
         return response()->json($conversation);
     }
 
-
     private function getOrCreateActiveConversation(int $userId): Conversation
     {
         $conversation = Conversation::where('user_id', $userId)
@@ -50,7 +52,7 @@ class ChatController extends Controller
             ->latest('updated_at')
             ->first();
 
-        if (!$conversation) {
+        if (! $conversation) {
             $conversation = Conversation::create([
                 'user_id' => $userId,
                 'status' => Conversation::STATUS_BOT,
@@ -61,7 +63,6 @@ class ChatController extends Controller
         return $conversation;
     }
 
-
     /**
      * User saját beszélgetésének lekérése
      */
@@ -70,6 +71,7 @@ class ChatController extends Controller
         $userId = auth('api')->id();
         $conversation = $this->getOrCreateActiveConversation($userId);
         $conversation->load('messages.sender');
+
         return response()->json($conversation);
     }
 
@@ -78,13 +80,13 @@ class ChatController extends Controller
      */
     public function listConversations()
     {
-        $conversations = Conversation::with(['user', 'messages' => function($q) {
+        $conversations = Conversation::with(['user', 'messages' => function ($q) {
             $q->latest()->limit(1);
         }])
-        ->whereIn('status', [Conversation::STATUS_OPEN, Conversation::STATUS_PENDING])
-        ->orWhere('handoff_requested', true)
-        ->orderBy('updated_at', 'desc')
-        ->get();
+            ->whereIn('status', [Conversation::STATUS_OPEN, Conversation::STATUS_PENDING])
+            ->orWhere('handoff_requested', true)
+            ->orderBy('updated_at', 'desc')
+            ->get();
 
         return response()->json($conversations);
     }
@@ -95,6 +97,7 @@ class ChatController extends Controller
     public function getConversationById($id)
     {
         $conversation = Conversation::with(['user', 'messages.sender'])->findOrFail($id);
+
         return response()->json($conversation);
     }
 
@@ -108,7 +111,10 @@ class ChatController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'error_key' => 'chat.response.error.validation_failed',
+                'errors' => $validator->errors(),
+            ], 422);
         }
 
         $message = $this->chatService->sendAgentMessage(
@@ -128,6 +134,8 @@ class ChatController extends Controller
         $conversation = Conversation::findOrFail($conversationId);
         $conversation->update(['status' => Conversation::STATUS_CLOSED]);
 
-        return response()->json(['message' => 'Conversation closed']);
+        return response()->json([
+            'message_key' => 'chat.response.success.conversation_closed',
+        ]);
     }
 }

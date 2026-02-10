@@ -1,12 +1,12 @@
 <template>
   <!-- Floating bubble -->
   <Button
-      class="chat-fab"
-      rounded
-      aria-label="Chat"
-      icon="pi pi-comments"
-      severity="info"
-      @click="toggle"
+    class="chat-fab"
+    rounded
+    aria-label="Chat"
+    icon="pi pi-comments"
+    severity="info"
+    @click="toggle"
   />
 
   <!-- Popup box -->
@@ -19,18 +19,18 @@
         </div>
 
         <Button
-            class="close-btn"
-            icon="pi pi-times"
-            severity="secondary"
-            text
-            rounded
-            aria-label="Close"
-            @click="open = false"
+          class="close-btn"
+          icon="pi pi-times"
+          severity="secondary"
+          text
+          rounded
+          aria-label="Close"
+          @click="open = false"
         />
       </div>
 
       <div class="chat-box-body">
-        <ChatPanel :mode=ROLE.USER />
+        <ChatPanel :mode="ROLE.USER" />
       </div>
     </div>
   </Transition>
@@ -40,7 +40,7 @@
 import { ref } from 'vue'
 import Button from 'primevue/button'
 import ChatPanel from './ChatPanel.vue'
-import {ROLE} from "../types/Role.ts";
+import { ROLE } from '../types/Role.ts'
 
 const open = ref(false)
 
@@ -79,8 +79,8 @@ const toggle = () => {
   overflow: hidden;
 
   box-shadow:
-      0 20px 60px rgba(0, 0, 0, 0.20),
-      0 6px 18px rgba(0, 0, 0, 0.10);
+    0 20px 60px rgba(0, 0, 0, 0.2),
+    0 6px 18px rgba(0, 0, 0, 0.1);
 
   display: flex;
   flex-direction: column;
@@ -117,7 +117,9 @@ const toggle = () => {
 /* Animation (bottom -> up + fade) */
 .chat-pop-enter-active,
 .chat-pop-leave-active {
-  transition: transform 180ms ease, opacity 180ms ease;
+  transition:
+    transform 180ms ease,
+    opacity 180ms ease;
 }
 .chat-pop-enter-from,
 .chat-pop-leave-to {

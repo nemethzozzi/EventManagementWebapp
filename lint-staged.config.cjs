@@ -1,12 +1,12 @@
 module.exports = {
     // FRONTEND: ESLint + Prettier
     'frontend/**/*.{js,jsx,ts,tsx,vue}': [
-        'npx --prefix frontend eslint --fix',
-        'prettier --write',
+        'bash -lc "cd frontend && npx eslint . --fix"',
+        'bash -lc "cd frontend && npx prettier . --write"',
     ],
 
     // BACKEND: Laravel Pint (formatter)
     'backend/**/*.php': [
-        'php backend/vendor/bin/pint',
+        'bash -lc "cd backend && php vendor/bin/pint"',
     ],
 }

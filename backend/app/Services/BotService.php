@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\FaqEntry;
@@ -7,9 +8,6 @@ class BotService
 {
     /**
      * Bot válasz generálása kulcsszavak alapján
-     *
-     * @param string $message
-     * @return string|null
      */
     public function generateResponse(string $message): ?string
     {
@@ -44,6 +42,7 @@ class BotService
                 return true;
             }
         }
+
         return false;
     }
 }

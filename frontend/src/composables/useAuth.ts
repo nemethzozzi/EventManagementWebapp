@@ -1,8 +1,8 @@
 import { ref, computed } from 'vue'
 import apiClient from '../api/axios.ts'
 import { useRouter } from 'vue-router'
-import {ROUTES} from "../routes/routes.ts";
-import type {RoleType} from "../types/Role.ts";
+import { ROUTES } from '../routes/routes.ts'
+import type { RoleType } from '../types/Role.ts'
 
 interface User {
   id: number

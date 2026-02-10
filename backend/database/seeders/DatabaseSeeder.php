@@ -1,10 +1,11 @@
 <?php
+
 namespace Database\Seeders;
 
-use App\Models\Message;
-use Illuminate\Database\Seeder;
-use App\Models\User;
 use App\Models\FaqEntry;
+use App\Models\Message;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -38,7 +39,7 @@ class DatabaseSeeder extends Seeder
         // FAQ entries
         FaqEntry::create([
             'keywords' => 'esemény létrehozás, event létrehozás, új esemény, hogyan hozzak létre',
-            'answer' => "Esemény létrehozásához add meg a címet, válassz dátumot, majd írd be a leírást és mentsd el.",
+            'answer' => 'Esemény létrehozásához add meg a címet, válassz dátumot, majd írd be a leírást és mentsd el.',
         ]);
 
         FaqEntry::create([
@@ -52,7 +53,7 @@ class DatabaseSeeder extends Seeder
         ]);
         FaqEntry::create([
             'keywords' => 'leírás szerkesztés, esemény szerkesztés, event szerkesztés, módosítás',
-            'answer' => "Esemény szerkesztéséhez nyisd meg az eseményt, módosítsd a leírást vagy a címet, majd mentsd el.",
+            'answer' => 'Esemény szerkesztéséhez nyisd meg az eseményt, módosítsd a leírást vagy a címet, majd mentsd el.',
         ]);
         FaqEntry::create([
             'keywords' => 'jelszó, password, reset',
@@ -60,19 +61,19 @@ class DatabaseSeeder extends Seeder
         ]);
         FaqEntry::create([
             'keywords' => 'dátum módosítás, időpont módosítás, dátum választás, mikor lesz',
-            'answer' => "A dátumot az esemény szerkesztésénél tudod módosítani: válassz új időpontot, majd mentsd el.",
+            'answer' => 'A dátumot az esemény szerkesztésénél tudod módosítani: válassz új időpontot, majd mentsd el.',
         ]);
         FaqEntry::create([
             'keywords' => 'törlés, esemény törlés, event törlés, hogyan töröljem',
-            'answer' => "Egy esemény törléséhez nyisd meg az eseményt és válaszd a Törlés opciót. A törlés végleges lehet (rendszertől függően).",
+            'answer' => 'Egy esemény törléséhez nyisd meg az eseményt és válaszd a Törlés opciót. A törlés végleges lehet (rendszertől függően).',
         ]);
         FaqEntry::create([
             'keywords' => 'nem találom, hol van, eltűnt, lista',
-            'answer' => "Ellenőrizd az események listáját és a szűrőket. Ha dátum szerint szűrsz, lehet, hogy az esemény a másik időszakban van.",
+            'answer' => 'Ellenőrizd az események listáját és a szűrőket. Ha dátum szerint szűrsz, lehet, hogy az esemény a másik időszakban van.',
         ]);
         FaqEntry::create([
             'keywords' => 'agent, ügyintéző, ember, support, segítség',
-            'answer' => "Rendben, kapcsolok egy ügyintézőt.",
+            'answer' => 'Rendben, kapcsolok egy ügyintézőt.',
         ]);
     }
 }

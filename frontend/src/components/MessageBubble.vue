@@ -1,6 +1,6 @@
 <template>
   <div class="mb-3 d-flex" :class="rowClass">
-    <div class="d-inline-block p-3 rounded" :class="bubbleClass" style="max-width: 70%;">
+    <div class="d-inline-block p-3 rounded" :class="bubbleClass" style="max-width: 70%">
       <div class="fw-bold small">{{ senderName }}</div>
       <div>{{ message.content }}</div>
       <div class="text-muted small mt-1">{{ formatTime(message.created_at) }}</div>

@@ -19,16 +19,16 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'error_key' => 'auth.validation_failed',
+                'error_key' => 'auth.response.error.validation_failed',
                 'errors' => $validator->errors(),
             ], 422);
         }
 
         $credentials = $request->only('email', 'password');
 
-        if (!$token = auth('api')->attempt($credentials)) {
+        if (! $token = auth('api')->attempt($credentials)) {
             return response()->json([
-                'error_key' => 'auth.invalid_credentials',
+                'error_key' => 'auth.response.error.invalid_credentials',
             ], 401);
         }
 
@@ -53,7 +53,7 @@ class AuthController extends Controller
         auth('api')->logout();
 
         return response()->json([
-            'message_key' => 'auth.logout_success',
+            'message_key' => 'auth.response.success.logout',
         ]);
     }
 

@@ -1,9 +1,10 @@
 <?php
+
 namespace App\Services;
 
+use App\Events\MessageSent;
 use App\Models\Conversation;
 use App\Models\Message;
-use App\Events\MessageSent;
 
 class ChatService
 {
@@ -25,7 +26,7 @@ class ChatService
             ->latest('updated_at')
             ->first();
 
-        if (!$conversation) {
+        if (! $conversation) {
             $conversation = Conversation::create([
                 'user_id' => $userId,
                 'status' => Conversation::STATUS_BOT, // indulhat bottal, ahogy eddig
@@ -89,7 +90,7 @@ class ChatService
         $conversation = Conversation::findOrFail($conversationId);
 
         // Ha még nincs hozzárendelve agent, most hozzárendeljük
-        if (!$conversation->assigned_agent_id) {
+        if (! $conversation->assigned_agent_id) {
             $conversation->update([
                 'assigned_agent_id' => $agentId,
                 'status' => Conversation::STATUS_PENDING,

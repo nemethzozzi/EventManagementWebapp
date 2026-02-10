@@ -1,66 +1,109 @@
 <template>
-  <div class="card mb-4">
-    <div class="card-header">
-      <h4>{{ $t('events_form.new_event') }}</h4>
-    </div>
-    <div class="card-body">
-      <form @submit.prevent="createEvent">
-        <div class="mb-3">
-          <label for="title" class="form-label">{{ $t('events_form.title') }} *</label>
-          <input
-            type="text"
-            class="form-control"
-            id="title"
-            v-model="form.title"
-            required
+  <div class="form-page">
+    <Card class="form-card">
+      <template #title>
+        <div class="title-row">
+          <i class="pi pi-calendar-plus" />
+          <span>{{ $t('events_form.new_event') }}</span>
+        </div>
+      </template>
+
+      <template #content>
+        <form class="form mt-3" @submit.prevent="createEvent">
+          <!-- Title -->
+          <div class="field">
+            <FloatLabel>
+              <InputText
+                id="title"
+                v-model.trim="form.title"
+                class="w-full"
+                :invalid="submitted && !form.title"
+                autocomplete="off"
+              />
+              <label for="title">{{ $t('events_form.title') }} *</label>
+            </FloatLabel>
+
+            <small v-if="submitted && !form.title" class="p-error">
+              {{ $t('validation.required') }}
+            </small>
+          </div>
+
+          <!-- DateTime (PrimeVue DatePicker) -->
+          <div class="field">
+            <FloatLabel>
+              <DatePicker
+                inputId="occurs_at"
+                v-model="occursAt"
+                class="w-full"
+                :invalid="submitted && !occursAt"
+                showIcon
+                iconDisplay="input"
+                showTime
+                hourFormat="24"
+                :manualInput="false"
+              />
+              <label for="occurs_at">{{ $t('events_form.time') }} *</label>
+            </FloatLabel>
+
+            <small v-if="submitted && !occursAt" class="p-error">
+              {{ $t('validation.required') }}
+            </small>
+          </div>
+
+          <!-- Description -->
+          <div class="field">
+            <FloatLabel>
+              <Textarea
+                id="description"
+                v-model.trim="form.description"
+                class="w-full"
+                autoResize
+                rows="3"
+              />
+              <label for="description">{{ $t('events_form.description') }}</label>
+            </FloatLabel>
+          </div>
+
+          <!-- Submit -->
+          <Button
+            type="submit"
+            class="w-full"
+            :label="$t('events_form.create_event')"
+            :loading="loading"
+            :disabled="loading"
           />
-        </div>
-
-        <div class="mb-3">
-          <label for="occurs_at" class="form-label">{{ $t('events_form.time') }} *</label>
-          <input
-            type="datetime-local"
-            class="form-control"
-            id="occurs_at"
-            v-model="form.occurs_at"
-            required
-          />
-        </div>
-
-        <div class="mb-3">
-          <label for="description" class="form-label">{{ $t('events_form.description') }}</label>
-          <textarea
-            class="form-control"
-            id="description"
-            rows="3"
-            v-model="form.description"
-          ></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-primary" :disabled="loading">
-          {{ loading ? $t('events_form.creating') : $t('events_form.create_event') }}
-        </button>
-      </form>
-    </div>
+        </form>
+      </template>
+    </Card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import apiClient from '../api/axios'
-import {ROUTES} from "../routes/routes.ts";
-import {notify} from "../lib/notifyBus.ts";
+import { ROUTES } from '../routes/routes'
+import { notify } from '../lib/notifyBus'
 
-const emit = defineEmits(['event-created'])
+import Card from 'primevue/card'
+import Button from 'primevue/button'
+import InputText from 'primevue/inputtext'
+import FloatLabel from 'primevue/floatlabel'
+import Textarea from 'primevue/textarea'
+import DatePicker from 'primevue/datepicker'
 
-/**
- * Form
- */
+const emit = defineEmits<{
+  (e: 'event-created'): void
+}>()
+
 const form = ref({
   title: '',
-  occurs_at: '',
   description: '',
 })
+
+/**
+ * DatePicker Date objektummal dolgozik
+ */
+const occursAt = ref<Date | null>(null)
 
 /**
  * Betöltés
@@ -68,21 +111,46 @@ const form = ref({
 const loading = ref(false)
 
 /**
- * Event létrehozása
+ * Submitelve lett-e a form
+ */
+const submitted = ref(false)
+
+/**
+ * Valid-e a form
+ */
+const isFormValid = computed(() => {
+  return form.value.title.trim().length > 0 && !!occursAt.value
+})
+
+/**
+ * Form reset
+ */
+const resetForm = () => {
+  form.value = { title: '', description: '' }
+  occursAt.value = null
+  submitted.value = false
+}
+
+/**
+ * Esemény létrehozása
  */
 const createEvent = async () => {
+  submitted.value = true
+  if (!isFormValid.value) return
+
   loading.value = true
-
   try {
-    const response = await apiClient.post(ROUTES.EVENTS, form.value)
-
-    // Form reset
-    form.value = {
-      title: '',
-      occurs_at: '',
-      description: '',
+    const payload = {
+      title: form.value.title,
+      occurs_at: occursAt.value!.toISOString(),
+      description: form.value.description?.trim() ? form.value.description.trim() : null,
     }
+
+    const response = await apiClient.post(ROUTES.EVENTS, payload)
+
     notify.success(response.data.message_key)
+    emit('event-created')
+    resetForm()
   } catch (error: any) {
     console.error(error)
     notify.error(error.response.data.error_key)
@@ -91,3 +159,44 @@ const createEvent = async () => {
   }
 }
 </script>
+
+<style scoped>
+.form-page {
+  width: 100%;
+}
+
+.form-card {
+  border-radius: 18px;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+:deep(.p-inputtext),
+:deep(.p-textarea),
+:deep(.p-datepicker),
+:deep(.p-datepicker-input) {
+  width: 100%;
+}
+</style>

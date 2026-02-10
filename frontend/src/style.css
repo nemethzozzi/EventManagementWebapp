@@ -1,0 +1,13 @@
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: #f6f7fb;
+}
+
+html.dark body {
+  background: #0b0b0f;
+  color: rgba(255, 255, 255, 0.92);
+}

@@ -12,7 +12,7 @@ return new class extends Migration
         Schema::create('conversations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->enum('status', [Conversation::STATUS_BOT, Conversation::STATUS_OPEN, Conversation::STATUS_PENDING,Conversation::STATUS_CLOSED, Conversation::STATUS_ASSIGNED])->default('bot');
+            $table->enum('status', [Conversation::STATUS_BOT, Conversation::STATUS_OPEN, Conversation::STATUS_PENDING, Conversation::STATUS_CLOSED, Conversation::STATUS_ASSIGNED])->default('bot');
             $table->boolean('handoff_requested')->default(false);
             $table->foreignId('assigned_agent_id')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();

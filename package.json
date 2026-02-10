@@ -6,8 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky",
-    "format": "prettier --write .",
-    "lint:staged": "lint-staged"
+    "format": "cd frontend && prettier --write .",
+    "lint:staged": "lint-staged",
+    "checkLangKeys": "cd frontend && node scripts/checkLangKeys.mjs"
   },
   "keywords": [],
   "author": "",

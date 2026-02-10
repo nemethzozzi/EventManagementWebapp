@@ -1,198 +1,120 @@
 <template>
   <div class="container mt-4">
-    <div class="d-flex justify-content-between mb-3">
-      <h2>{{ $t('admin_users_page.users_management') }}</h2>
-      <router-link :to=ROUTES.EVENTS class="btn btn-secondary">{{ $t('admin_users_page.button.back') }}</router-link>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="m-0">{{ $t('admin_users_page.users_management') }}</h2>
+
+      <Button
+        severity="secondary"
+        icon="pi pi-arrow-left"
+        :label="$t('admin_users_page.button.back')"
+        @click="goBack"
+        :outlined="true"
+      />
     </div>
 
-    <!-- Új felhasználó létrehozása -->
-    <div class="card mb-4">
-      <div class="card-header">
-        <h5>{{ $t('admin_users_page.new_user') }}</h5>
-      </div>
-      <div class="card-body">
-        <form @submit.prevent="createUser">
-          <div class="row">
-            <div class="col-md-3">
-              <input
-                type="text"
-                class="form-control"
-                :placeholder="$t('admin_users_page.name')"
-                v-model="newUser.name"
-                required
-              />
-            </div>
-            <div class="col-md-3">
-              <input
-                type="email"
-                class="form-control"
-                :placeholder="$t('admin_users_page.email')"
-                v-model="newUser.email"
-                required
-              />
-            </div>
-            <div class="col-md-2">
-              <input
-                type="password"
-                class="form-control"
-                :placeholder="$t('admin_users_page.password')"
-                v-model="newUser.password"
-                required
-                minlength="8"
-              />
-            </div>
-            <div class="col-md-2">
-              <select class="form-select" v-model="newUser.role" required>
-                <option :value=ROLE.USER>User</option>
-                <option :value=ROLE.HELPDESK_AGENT>Helpdesk Agent</option>
-                <option :value=ROLE.ADMIN>Admin</option>
-              </select>
-            </div>
-            <div class="col-md-2">
-              <button type="submit" class="btn btn-primary w-100" :disabled="creating">
-                {{ creating ? $t('admin_users_page.creating') : $t('admin_users_page.create') }}
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
+    <AdminUserCreateForm :creating="creating" @submit="createUser" class="mb-4" />
 
-    <!-- Felhasználók listája -->
-    <div class="card">
-      <div class="card-header">
-        <h5>{{ $t('admin_users_page.table.title') }}</h5>
-      </div>
-      <div class="card-body">
-        <!-- TODO table komponenst létrehozni -->
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>{{ $t('admin_users_page.table.name') }}</th>
-              <th>{{ $t('admin_users_page.table.email') }}</th>
-              <th>{{ $t('admin_users_page.table.role') }}</th>
-              <th>{{ $t('admin_users_page.table.actions') }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="user in users" :key="user.id">
-              <td>{{ user.name }}</td>
-              <td>{{ user.email }}</td>
-              <td>
-                <select
-                  class="form-select form-select-sm"
-                  :value="user.role"
-                  @change="updateUserRole(user.id, ($event.target as HTMLSelectElement).value)"
-                >
-                  <!-- TODO nyelvi kulcs -->
-                  <option :value=ROLE.USER>User</option>
-                  <option :value=ROLE.HELPDESK_AGENT>Helpdesk Agent</option>
-                  <option :value=ROLE.ADMIN>Admin</option>
-                </select>
-              </td>
-              <td>
-                <button
-                  @click="deleteUser(user.id)"
-                  class="btn btn-danger btn-sm"
-                  :disabled="user.id === currentUserId"
-                >
-                  {{ $t('admin_users_page.button.delete') }}
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <AdminUsersTable
+      :users="users"
+      :currentUserId="currentUserId"
+      :loading="loading"
+      @role-change="({ userId, role }) => updateUserRole(userId, role)"
+      @delete="deleteUser"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import apiClient from '../api/axios'
 import { useAuth } from '../composables/useAuth'
-import type {User} from "../types/User.ts";
-import { t } from '../lib/i18n'
+import type { User } from '../types/User'
 import { notify } from '../lib/notifyBus'
-import {ROUTES} from "../routes/routes.ts";
-import {ROLE} from "../types/Role.ts";
+import { ROUTES } from '../routes/routes'
 
-/**
- * Jelenlegi felhasználó
- */
+import Button from 'primevue/button'
+import AdminUserCreateForm from '../components/AdminUserCreateForm.vue'
+import AdminUsersTable from '../components/AdminUsersTable.vue'
+import { confirm } from '../lib/confirmBus'
+import { t } from '../lib/i18n'
+
+const router = useRouter()
 const { user: currentUser } = useAuth()
 
 /**
  * Felhasználók
  */
 const users = ref<User[]>([])
+
+/**
+ * Létrehozás alatt van-e
+ */
 const creating = ref(false)
 
 /**
- * Új felhasználó
+ * Betöltés
  */
-const newUser = ref({
-  name: '',
-  email: '',
-  password: '',
-  role: 'user' as 'user' | 'helpdesk_agent' | 'admin',
-})
+const loading = ref(false)
 
 /**
- * Jelenlegi felhasználó azonosítója
+ * Jelenlegi felhasználó azonosító
  */
-const currentUserId = computed(() => currentUser.value?.id)
+const currentUserId = computed(() => currentUser.value?.id ?? null)
+
+const goBack = () => router.push(ROUTES.EVENTS)
 
 /**
  * Felhasználók betöltése
  */
 const loadUsers = async () => {
+  loading.value = true
   try {
     const response = await apiClient.get('/admin/users')
     users.value = response.data
-  } catch (error) {
+  } catch (error: any) {
     console.error(error)
+    notify.error(error.response.data.error_key)
+  } finally {
+    loading.value = false
   }
 }
 
 /**
  * Felhasználó létrehozása
+ *
+ * @param payload
  */
-const createUser = async () => {
+const createUser = async (payload: {
+  name: string
+  email: string
+  password: string
+  role: string
+}) => {
   creating.value = true
   try {
-    await apiClient.post('/admin/users', newUser.value)
-    
-    // Reset form
-    newUser.value = {
-      name: '',
-      email: '',
-      password: '',
-      role: 'user',
-    }
-    
+    const response = await apiClient.post('/admin/users', payload)
     await loadUsers()
     notify.success(response.data.message_key)
-    notify.success('admin.user_created') // TODO backendről jöjjön
   } catch (error: any) {
     console.error(error)
-    const errKey = error.response?.data?.error_key || error.response?.data?.error || 'errors.generic'
-    notify.error(errKey)
+    notify.error(error.response.data.error_key)
   } finally {
     creating.value = false
   }
 }
 
 /**
- * Felhasználó role-jának frissítése
+ * Szerepkör frissítése
  *
  * @param userId
- * @param newRole
+ * @param role
  */
-const updateUserRole = async (userId: number, newRole: string) => {
+const updateUserRole = async (userId: number, role: string) => {
   try {
-    await apiClient.put(`/admin/users/${userId}/role`, { role: newRole })
+    const response = await apiClient.put(`/admin/users/${userId}/role`, { role })
     await loadUsers()
+    notify.success(response.data.message_key)
   } catch (error: any) {
     console.error(error)
     notify.error(error.response.data.error_key)
@@ -205,17 +127,25 @@ const updateUserRole = async (userId: number, newRole: string) => {
  * @param userId
  */
 const deleteUser = async (userId: number) => {
-  // TODO ide is popup
+  const ok = await confirm.open({
+    title: t('admin_users_page.popup.title'),
+    message: t('admin_users_page.popup.message'),
+    severity: 'danger',
+    confirmLabel: t('admin_users_page.popup.delete'),
+    cancelLabel: t('admin_users_page.popup.cancel'),
+  })
+
+  if (!ok) return
+
   try {
-    await apiClient.delete(`/admin/users/${userId}`)
+    const response = await apiClient.delete(`/admin/users/${userId}`)
     await loadUsers()
+    notify.success(response.data.message_key)
   } catch (error: any) {
     console.error(error)
     notify.error(error.response.data.error_key)
   }
 }
 
-onMounted(() => {
-  loadUsers()
-})
+onMounted(loadUsers)
 </script>

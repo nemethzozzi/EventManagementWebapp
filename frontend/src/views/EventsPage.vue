@@ -1,8 +1,8 @@
 <template>
   <div class="container mt-4">
-    <h2>{{ $t('events_page.title')}}</h2>
+    <h2>{{ $t('events_page.title') }}</h2>
     <EventForm @event-created="loadEvents" />
-    <EventList :events="events" :loading=loading @event-updated="loadEvents" @event-deleted="loadEvents" />
+    <EventList :events="events" :loading="loading" @changed="loadEvents" />
   </div>
 </template>
 
@@ -11,9 +11,9 @@ import { ref, onMounted } from 'vue'
 import apiClient from '../api/axios'
 import EventForm from '../components/EventForm.vue'
 import EventList from '../components/EventList.vue'
-import {ROUTES} from "../routes/routes.ts";
-import type {Event} from "../types/Event.ts"
-import {notify} from "../lib/notifyBus.ts";
+import { ROUTES } from '../routes/routes.ts'
+import type { Event } from '../types/Event.ts'
+import { notify } from '../lib/notifyBus.ts'
 
 /**
  * Eventek

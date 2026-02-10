@@ -7,57 +7,56 @@ import ResetPasswordPage from '../views/ResetPasswordPage.vue'
 import EventsPage from '../views/EventsPage.vue'
 import AgentChatDashboard from '../views/AgentChatDashboard.vue'
 import AdminUsersPage from '../views/AdminUsersPage.vue'
-import {ROUTES} from "../routes/routes.ts";
-import NotFoundPage from "../views/NotFoundPage.vue";
-import {ROLE} from "../types/Role.ts";
-
+import { ROUTES } from '../routes/routes.ts'
+import NotFoundPage from '../views/NotFoundPage.vue'
+import { ROLE } from '../types/Role.ts'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: ROUTES.LOGIN,
     name: 'Login',
     component: LoginPage,
-    meta: { guest: true }
+    meta: { guest: true },
   },
   {
     path: ROUTES.FORGOT_PASSWORD,
     name: 'ForgotPassword',
     component: ForgotPasswordPage,
-    meta: { guest: true }
+    meta: { guest: true },
   },
   {
     path: ROUTES.RESET_PASSWORD,
     name: 'ResetPassword',
     component: ResetPasswordPage,
-    meta: { guest: true }
+    meta: { guest: true },
   },
   {
     path: '/',
-    redirect: ROUTES.EVENTS
+    redirect: ROUTES.EVENTS,
   },
   {
     path: ROUTES.EVENTS,
     name: 'Events',
     component: EventsPage,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
     path: ROUTES.AGENT_DASHBOARD,
     name: 'AgentDashboard',
     component: AgentChatDashboard,
-    meta: { requiresAuth: true, roles: [ROLE.HELPDESK_AGENT, ROLE.ADMIN] }
+    meta: { requiresAuth: true, roles: [ROLE.HELPDESK_AGENT, ROLE.ADMIN] },
   },
   {
     path: ROUTES.ADMIN,
     name: 'Admin',
     component: AdminUsersPage,
-    meta: { requiresAuth: true, roles: [ROLE.ADMIN] }
+    meta: { requiresAuth: true, roles: [ROLE.ADMIN] },
   },
   {
     path: ROUTES.PAGE_NOT_FOUND,
     name: 'NotFound',
     component: NotFoundPage,
-    meta: { guest: true }
+    meta: { guest: true },
   },
 ]
 
@@ -69,7 +68,7 @@ const router = createRouter({
 // Navigation guard
 router.beforeEach((to, from, next) => {
   const { isAuthenticated, userRole, loadUser } = useAuth()
-  
+
   // User betöltése ha van token
   if (isAuthenticated.value && !userRole.value) {
     loadUser()

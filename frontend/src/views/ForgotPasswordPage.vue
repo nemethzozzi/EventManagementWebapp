@@ -14,11 +14,11 @@
           <div class="field">
             <FloatLabel>
               <InputText
-                  id="email"
-                  v-model.trim="email"
-                  class="w-full"
-                  :invalid="submitted && !isEmailValid"
-                  autocomplete="email"
+                id="email"
+                v-model.trim="email"
+                class="w-full"
+                :invalid="submitted && !isEmailValid"
+                autocomplete="email"
               />
               <label for="email">{{ $t('forgot_password_page.email') }}</label>
             </FloatLabel>
@@ -30,11 +30,11 @@
 
           <!-- Submit -->
           <Button
-              type="submit"
-              class="w-full"
-              :label="$t('forgot_password_page.send_email')"
-              :loading="loading"
-              :disabled="loading"
+            type="submit"
+            class="w-full"
+            :label="$t('forgot_password_page.send_email')"
+            :loading="loading"
+            :disabled="loading"
           />
 
           <div class="mt-3 text-center">
@@ -57,7 +57,7 @@ import FloatLabel from 'primevue/floatlabel'
 import apiClient from '../api/axios'
 import { ROUTES } from '../routes/routes'
 import { notify } from '../lib/notifyBus'
-import {isValidEmail} from "../utils/emailValidation.ts";
+import { isValidEmail } from '../utils/emailValidation.ts'
 
 /**
  * Email

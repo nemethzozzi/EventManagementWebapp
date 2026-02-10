@@ -8,6 +8,7 @@ import { i18n } from './plugins/i18n'
 import Aura from '@primevue/themes/aura'
 import 'primeicons/primeicons.css'
 
+import './style.css'
 import router from './router'
 import './plugins/echo'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -17,15 +18,14 @@ const app = createApp(App)
 
 app.use(router)
 app.use(PrimeVue, {
-    theme: {
-        preset: Aura,
-        options: {
-            darkModeSelector: false // TODO - később darkmode
-        }
-    }
+  theme: {
+    preset: Aura,
+    options: {
+      darkModeSelector: '.dark',
+    },
+  },
 })
 app.use(ToastService)
 app.use(i18n)
 
 app.mount('#app')
-

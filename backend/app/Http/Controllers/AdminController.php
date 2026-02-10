@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -14,6 +15,7 @@ class AdminController extends Controller
     public function listUsers()
     {
         $users = User::all();
+
         return response()->json($users);
     }
 
@@ -30,7 +32,10 @@ class AdminController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'error_key' => 'admin_users_page.response.error.validation_failed',
+                'errors' => $validator->errors(),
+            ], 422);
         }
 
         $user = User::create([
@@ -40,7 +45,11 @@ class AdminController extends Controller
             'role' => $request->role,
         ]);
 
-        return response()->json($user, 201);
+        return response()->json([
+            'message_key' => 'admin_users_page.response.success.create_user',
+            'user' => $user,
+        ], 201);
+
     }
 
     /**
@@ -68,13 +77,18 @@ class AdminController extends Controller
     public function deleteUser($userId)
     {
         $user = User::findOrFail($userId);
-        
+
         // Nem törölheti saját magát
         if ($user->id === auth('api')->id()) {
-            return response()->json(['error' => 'Cannot delete yourself'], 400);
+            return response()->json([
+                'error_key' => 'admin_users_page.response.error.cannot_delete_urself',
+            ], 400);
         }
 
         $user->delete();
-        return response()->json(['message' => 'User deleted successfully']);
+
+        return response()->json([
+            'message_key' => 'admin_users_page.response.success.delete_user',
+        ]);
     }
 }

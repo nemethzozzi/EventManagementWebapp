@@ -63,7 +63,6 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     *
      * Evenet relációk
      *
      * @return HasMany<Event, User>

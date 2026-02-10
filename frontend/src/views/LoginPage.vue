@@ -13,11 +13,11 @@
           <div class="field">
             <FloatLabel>
               <InputText
-                  id="email"
-                  v-model.trim="email"
-                  class="w-full"
-                  :invalid="submitted && !isEmailValid"
-                  autocomplete="email"
+                id="email"
+                v-model.trim="email"
+                class="w-full"
+                :invalid="submitted && !isEmailValid"
+                autocomplete="email"
               />
               <label for="email">{{ $t('login_page.email') }}</label>
             </FloatLabel>
@@ -31,30 +31,30 @@
           <div class="field">
             <FloatLabel>
               <Password
-                  inputId="password"
-                  v-model="password"
-                  class="w-full"
-                  toggleMask
-                  :feedback="false"
-                  :invalid="submitted && !password"
-                  autocomplete="current-password"
+                inputId="password"
+                v-model="password"
+                class="w-full"
+                toggleMask
+                :feedback="false"
+                :invalid="submitted && !password"
+                autocomplete="current-password"
               />
               <label for="password">{{ $t('login_page.password') }}</label>
             </FloatLabel>
 
             <small v-if="submitted && !password" class="p-error">
-              {{ $t('validation.required') ?? 'Kötelező mező.' }}
+              {{ $t('validation.required') }}
             </small>
           </div>
 
           <!-- Submit -->
           <Button
-              type="submit"
-              class="w-full"
-              :label="$t('login_page.login')"
-              icon="pi pi-check"
-              :loading="loading"
-              :disabled="loading"
+            type="submit"
+            class="w-full"
+            :label="$t('login_page.login')"
+            icon="pi pi-check"
+            :loading="loading"
+            :disabled="loading"
           />
         </form>
 
@@ -91,7 +91,7 @@ import Message from 'primevue/message'
 import { useAuth } from '../composables/useAuth'
 import { ROUTES } from '../routes/routes'
 import { notify } from '../lib/notifyBus'
-import {isValidEmail} from "../utils/emailValidation.ts";
+import { isValidEmail } from '../utils/emailValidation.ts'
 
 const router = useRouter()
 const { login } = useAuth()

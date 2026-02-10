@@ -1,5 +1,5 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+#!/usr/bin/env bash
+set -euo pipefail
 
-npm run checkLangKeys
-npx lint-staged
+npm run checkLangKeys || { echo "❌ Hiányzó nyelvi kulcsok"; exit 1; }
+npx lint-staged || { echo "❌ Linter hiba"; exit 1; }

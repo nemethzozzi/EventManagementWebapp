@@ -6,17 +6,21 @@
 import { onMounted, onBeforeUnmount } from 'vue'
 import Toast from 'primevue/toast'
 import { useToast } from 'primevue/usetoast'
-import { notifyBus, type NotifyKeyPayload} from '../lib/notifyBus'
-import {NOTIFY} from "../types/Notify.ts";
-import {t} from "../lib/i18n.ts";
+import { notifyBus, type NotifyKeyPayload } from '../lib/notifyBus'
+import { NOTIFY } from '../types/Notify.ts'
+import { t } from '../lib/i18n.ts'
 
 const toast = useToast()
 
 const handler = (payload: NotifyKeyPayload) => {
-  // TODO ide még a nyelvi kulcsokat megírni
-  const summary = payload.summaryKey
-      ? t(payload.summaryKey)
-      : t(`toast.summary.${payload.severity}`)
+  const summaryKeyMap = {
+    success: t('toast.summary.success'),
+    info: t('toast.summary.info'),
+    warn: t('toast.summary.warn'),
+    error: t('toast.summary.error'),
+  } as const
+
+  const summary = summaryKeyMap[payload.severity]
 
   const detail = t(payload.detailKey, payload.detailParams)
 
@@ -43,10 +47,14 @@ onBeforeUnmount(() => {
  */
 function defaultLife(severity: NotifyKeyPayload['severity']) {
   switch (severity) {
-    case NOTIFY.SUCCESS: return 2500
-    case NOTIFY.INFO: return 3000
-    case NOTIFY.WARNING: return 3500
-    case NOTIFY.ERROR: return 4000
+    case NOTIFY.SUCCESS:
+      return 2500
+    case NOTIFY.INFO:
+      return 3000
+    case NOTIFY.WARNING:
+      return 3500
+    case NOTIFY.ERROR:
+      return 4000
   }
 }
 </script>

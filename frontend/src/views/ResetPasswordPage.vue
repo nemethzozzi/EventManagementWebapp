@@ -13,11 +13,11 @@
           <div class="field">
             <FloatLabel>
               <InputText
-                  id="email"
-                  v-model.trim="email"
-                  class="w-full"
-                  :invalid="submitted && !isEmailValid"
-                  autocomplete="email"
+                id="email"
+                v-model.trim="email"
+                class="w-full"
+                :invalid="submitted && !isEmailValid"
+                autocomplete="email"
               />
               <label for="email">{{ $t('reset_password_page.email') }}</label>
             </FloatLabel>
@@ -30,13 +30,13 @@
           <div class="field">
             <FloatLabel>
               <Password
-                  inputId="password"
-                  v-model="password"
-                  class="w-full"
-                  toggleMask
-                  :feedback="false"
-                  :invalid="submitted"
-                  autocomplete="new-password"
+                inputId="password"
+                v-model="password"
+                class="w-full"
+                toggleMask
+                :feedback="false"
+                :invalid="submitted"
+                autocomplete="new-password"
               />
               <label for="password">{{ $t('reset_password_page.password') }}</label>
             </FloatLabel>
@@ -46,13 +46,13 @@
           <div class="field">
             <FloatLabel>
               <Password
-                  inputId="password_confirmation"
-                  v-model="passwordConfirmation"
-                  class="w-full"
-                  toggleMask
-                  :feedback="false"
-                  :invalid="submitted && !isPasswordConfirmationValid"
-                  autocomplete="new-password"
+                inputId="password_confirmation"
+                v-model="passwordConfirmation"
+                class="w-full"
+                toggleMask
+                :feedback="false"
+                :invalid="submitted && !isPasswordConfirmationValid"
+                autocomplete="new-password"
               />
               <label for="password_confirmation">
                 {{ $t('reset_password_page.password_confirmation') }}
@@ -62,11 +62,11 @@
 
           <!-- Submit -->
           <Button
-              type="submit"
-              class="w-full"
-              :label="$t('reset_password_page.change_password')"
-              :loading="loading"
-              :disabled="loading"
+            type="submit"
+            class="w-full"
+            :label="$t('reset_password_page.change_password')"
+            :loading="loading"
+            :disabled="loading"
           />
         </form>
       </template>
@@ -85,7 +85,7 @@ import FloatLabel from 'primevue/floatlabel'
 import apiClient from '../api/axios'
 import { ROUTES } from '../routes/routes'
 import { notify } from '../lib/notifyBus'
-import {isValidEmail} from "../utils/emailValidation.ts";
+import { isValidEmail } from '../utils/emailValidation.ts'
 
 const route = useRoute()
 const router = useRouter()
@@ -124,7 +124,9 @@ const isEmailValid = computed(() => isValidEmail(email.value))
 /**
  * Ugyanez-e a jelszó confirm
  */
-const isPasswordConfirmationValid = computed(() => passwordConfirmation.value === password.value && passwordConfirmation.value.length > 0)
+const isPasswordConfirmationValid = computed(
+  () => passwordConfirmation.value === password.value && passwordConfirmation.value.length > 0,
+)
 
 /**
  * Valid-e a form
@@ -214,6 +216,4 @@ const handleResetPassword = async () => {
 :deep(.p-password-input) {
   padding-right: 2.5rem;
 }
-
-
 </style>

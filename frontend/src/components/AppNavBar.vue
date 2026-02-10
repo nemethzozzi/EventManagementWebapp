@@ -7,36 +7,43 @@
       </RouterLink>
 
       <div class="nav-actions">
+        <Button
+          :icon="mode === THEME.DARK ? 'pi pi-moon' : 'pi pi-sun'"
+          severity="secondary"
+          :outlined="true"
+          rounded
+          @click="toggle"
+        />
         <Select
-            v-model="selectedLocale"
-            :options="localeOptions"
-            optionLabel="label"
-            optionValue="value"
-            class="lang-select"
+          v-model="selectedLocale"
+          :options="localeOptions"
+          optionLabel="label"
+          optionValue="value"
+          class="lang-select"
         />
         <Button
-            v-if="isAgentOrAdmin"
-            :label="$t('nav.agent_dashboard')"
-            icon="pi pi-headphones"
-            severity="secondary"
-            :outlined="true"
-            @click="go(ROUTES.AGENT_DASHBOARD)"
-        />
-
-        <Button
-            v-if="isAdmin"
-            :label="$t('nav.admin')"
-            icon="pi pi-cog"
-            severity="warning"
-            :outlined="true"
-            @click="go(ROUTES.ADMIN)"
+          v-if="isAgentOrAdmin"
+          :label="$t('nav.agent_dashboard')"
+          icon="pi pi-headphones"
+          severity="secondary"
+          :outlined="true"
+          @click="go(ROUTES.AGENT_DASHBOARD)"
         />
 
         <Button
-            :label="$t('nav.logout')"
-            icon="pi pi-sign-out"
-            severity="danger"
-            @click="handleLogout"
+          v-if="isAdmin"
+          :label="$t('nav.admin')"
+          icon="pi pi-cog"
+          severity="warning"
+          :outlined="true"
+          @click="go(ROUTES.ADMIN)"
+        />
+
+        <Button
+          :label="$t('nav.logout')"
+          icon="pi pi-sign-out"
+          severity="danger"
+          @click="handleLogout"
         />
       </div>
     </div>
@@ -44,19 +51,22 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref, watch} from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { ROUTES } from '../routes/routes'
 import { useAuth } from '../composables/useAuth'
 
 import Button from 'primevue/button'
 import Select from 'primevue/select'
-import {ROLE} from "../types/Role.ts";
-import {LOCAL, type LocalType} from "../types/Local.ts";
-import {getLocale, setLocale, t} from "../lib/i18n.ts";
+import { ROLE } from '../types/Role.ts'
+import { LOCAL, type LocalType } from '../types/Local.ts'
+import { getLocale, setLocale, t } from '../lib/i18n.ts'
+import { THEME } from '../types/Theme.ts'
+import { useTheme } from '../composables/useTheme.ts'
 
 const router = useRouter()
 const { userRole, logout } = useAuth()
+const { mode, toggle } = useTheme()
 
 /**
  * Admin-e
@@ -67,7 +77,7 @@ const isAdmin = computed(() => userRole.value === ROLE.ADMIN)
  * Admin vagy agent-e
  */
 const isAgentOrAdmin = computed(
-    () => userRole.value === ROLE.HELPDESK_AGENT || userRole.value === ROLE.ADMIN
+  () => userRole.value === ROLE.HELPDESK_AGENT || userRole.value === ROLE.ADMIN,
 )
 
 const go = (path: string) => router.push(path)
@@ -93,7 +103,6 @@ const handleLogout = async () => {
 }
 
 watch(selectedLocale, (l) => setLocale(l), { immediate: true })
-
 </script>
 
 <style scoped>
@@ -134,5 +143,14 @@ watch(selectedLocale, (l) => setLocale(l), { immediate: true })
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+:global(html.dark) .nav-shell {
+  background: rgba(15, 15, 15, 0.72);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+:global(html.dark) .brand {
+  color: rgba(255, 255, 255, 0.92);
 }
 </style>

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,9 +12,13 @@ class Conversation extends Model
     use HasFactory;
 
     public const STATUS_BOT = 'bot';
+
     public const STATUS_OPEN = 'open';
+
     public const STATUS_PENDING = 'pending';
+
     public const STATUS_ASSIGNED = 'assigned';
+
     public const STATUS_CLOSED = 'closed';
 
     /**

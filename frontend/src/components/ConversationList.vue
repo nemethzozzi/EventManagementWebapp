@@ -6,21 +6,20 @@
 
     <div v-if="loading" class="d-flex justify-content-center align-items-center w-100">
       <ProgressSpinner
-          style="width: 50px;
-          height: 50px"
-          strokeWidth="8"
-          fill="transparent"
-          animationDuration=".5s"
+        style="width: 50px; height: 50px"
+        strokeWidth="8"
+        fill="transparent"
+        animationDuration=".5s"
       />
-      </div>
+    </div>
     <div v-else class="card-body" :style="{ maxHeight, overflowY: 'auto' }">
       <div
-          v-for="conv in conversations"
-          :key="conv.id"
-          class="card mb-2 cursor-pointer"
-          :class="{ 'border-primary': selectedId === conv.id }"
-          @click="$emit('select', conv.id)"
-          style="cursor: pointer;"
+        v-for="conv in conversations"
+        :key="conv.id"
+        class="card mb-2 cursor-pointer"
+        :class="{ 'border-primary': selectedId === conv.id }"
+        @click="$emit('select', conv.id)"
+        style="cursor: pointer"
       >
         <div class="card-body p-2">
           <div class="fw-bold">{{ conv.user?.name ?? '-' }}</div>
@@ -48,11 +47,10 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import {STATUS, type StatusType} from "../types/Status.ts";
-import {t} from "../lib/i18n.ts";
-import type {Conversation} from "../types/Conversation.ts";
-import ProgressSpinner from 'primevue/progressspinner';
-
+import { STATUS, type StatusType } from '../types/Status.ts'
+import { t } from '../lib/i18n.ts'
+import type { Conversation } from '../types/Conversation.ts'
+import ProgressSpinner from 'primevue/progressspinner'
 
 defineProps({
   conversations: {
@@ -70,7 +68,7 @@ defineProps({
   loading: {
     type: Boolean,
     default: false,
-  }
+  },
 })
 
 defineEmits<{
@@ -99,9 +97,17 @@ const statusBadgeClass = (status: StatusType) => {
  * Backend státusz -> i18n kulcs
  */
 const statusText = (status: string) => {
-  const key = `chat.status.${status}`
-  const translated = t(key)
-  return translated === key ? status : translated
+  switch (status) {
+    case STATUS.OPEN:
+      return t('chat.status.open')
+    case STATUS.PENDING:
+      return t('chat.status.pending')
+    case STATUS.ASSIGNED:
+      return t('chat.status.assigned')
+    case STATUS.CLOSED:
+      return t('chat.status.closed')
+    default:
+      return status
+  }
 }
 </script>
-

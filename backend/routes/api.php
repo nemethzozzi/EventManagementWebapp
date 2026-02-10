@@ -1,11 +1,12 @@
 <?php
+
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\PasswordResetController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\PasswordResetController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\ChatController;
-use App\Http\Controllers\AdminController;
 
 // Public routes
 Route::post('/login', [AuthController::class, 'login']);
@@ -18,7 +19,7 @@ Route::get('/password/reset/{token}', function (string $token, Request $request)
     $frontend = rtrim(env('FRONTEND_URL', 'http://localhost:5173'), '/');
 
     return redirect()->away(
-        $frontend . '/reset-password/' . $token . '?email=' . urlencode($email)
+        $frontend.'/reset-password/'.$token.'?email='.urlencode($email)
     );
 })->name('password.reset');
 

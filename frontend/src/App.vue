@@ -7,15 +7,15 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted} from 'vue'
+import { computed, onMounted } from 'vue'
 import { useAuth } from './composables/useAuth'
 import ToastHost from './components/ToastHost.vue'
 import { useRoute } from 'vue-router'
-import AppNavBar from "./components/AppNavBar.vue";
+import AppNavBar from './components/AppNavBar.vue'
 import ConfirmPopup from './components/ConfirmPopup.vue'
-import {ROUTES} from "./routes/routes.ts";
-import {ROLE} from "./types/Role.ts";
-import ChatWidget from "./components/ChatWidget.vue";
+import { ROUTES } from './routes/routes.ts'
+import { ROLE } from './types/Role.ts'
+import ChatWidget from './components/ChatWidget.vue'
 
 /**
  * Felhasználó betöltése

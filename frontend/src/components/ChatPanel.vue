@@ -7,32 +7,31 @@
       </div>
 
       <Button
-          v-if="!isClosed"
-          size="small"
-          severity="danger"
-          icon="pi pi-lock"
-          :label="$t('chat.close')"
-          @click="closeConversation"
+        v-if="!isClosed"
+        size="small"
+        severity="danger"
+        icon="pi pi-lock"
+        :label="$t('chat.close')"
+        @click="closeConversation"
       />
     </div>
 
     <div ref="chatContainer" class="chat-body">
       <div v-if="loading" class="d-flex justify-content-center align-items-center w-100 h-100">
         <ProgressSpinner
-            style="width: 50px;
-            height: 50px"
-            strokeWidth="8"
-            fill="transparent"
-            animationDuration=".5s"
+          style="width: 50px; height: 50px"
+          strokeWidth="8"
+          fill="transparent"
+          animationDuration=".5s"
         />
       </div>
       <template v-else>
         <MessageBubble
-            v-for="m in conversation?.messages ?? []"
-            :key="m.id"
-            :message="m"
-            :currentRole="props.mode"
-            :userName="conversation?.user?.name ?? ''"
+          v-for="m in conversation?.messages ?? []"
+          :key="m.id"
+          :message="m"
+          :currentRole="props.mode"
+          :userName="conversation?.user?.name ?? ''"
         />
       </template>
     </div>
@@ -40,16 +39,16 @@
     <div class="chat-footer" v-if="!isClosed">
       <form class="chat-form" @submit.prevent="sendMessage">
         <InputText
-            v-model="message"
-            class="w-100"
-            :placeholder="$t('chat.placeholder')"
-            :disabled="sending"
+          v-model="message"
+          class="w-100"
+          :placeholder="$t('chat.placeholder')"
+          :disabled="sending"
         />
         <Button
-            type="submit"
-            icon="pi pi-send"
-            :label="$t('chat.send')"
-            :disabled="sending || !message.trim()"
+          type="submit"
+          icon="pi pi-send"
+          :label="$t('chat.send')"
+          :disabled="sending || !message.trim()"
         />
       </form>
     </div>
@@ -62,17 +61,16 @@
 </template>
 
 <script setup lang="ts">
-import {ref, nextTick, computed, watch, type PropType, onUnmounted} from 'vue'
+import { ref, nextTick, computed, watch, type PropType, onUnmounted } from 'vue'
 import apiClient from '../api/axios'
 import MessageBubble from '../components/MessageBubble.vue'
-import {ROLE, type RoleType} from "../types/Role.ts";
-import ProgressSpinner from "primevue/progressspinner";
-import type {Conversation} from "../types/Conversation.ts";
+import { ROLE, type RoleType } from '../types/Role.ts'
+import ProgressSpinner from 'primevue/progressspinner'
+import type { Conversation } from '../types/Conversation.ts'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
-import {STATUS} from "../types/Status.ts";
-import {SENDER} from "../types/Sender.ts";
-
+import { STATUS } from '../types/Status.ts'
+import { SENDER } from '../types/Sender.ts'
 
 const props = defineProps({
   conversationId: {
@@ -105,7 +103,6 @@ const message = ref('')
  */
 const loading = ref(false)
 
-
 /**
  * Küldés
  */
@@ -135,18 +132,17 @@ const channelName = computed(() => {
   return id ? `conversation.${id}` : null
 })
 
-
 /**
  * Mód alapján megkülönböztetjük az endpointokat
  */
 const endpoints = computed(() => {
   return props.mode === ROLE.HELPDESK_AGENT
-      ? {
+    ? {
         get: (id: number) => `/chat/conversations/${id}`,
         send: (id: number) => `/chat/conversations/${id}/message`,
         close: (id: number) => `/chat/conversations/${id}/close`,
       }
-      : {
+    : {
         get: () => `/chat/conversation`,
         send: () => `/chat/message`,
         close: null,
@@ -160,9 +156,9 @@ const loadConversation = async () => {
   loading.value = true
   try {
     const res =
-        props.mode === ROLE.HELPDESK_AGENT
-            ? await apiClient.get(endpoints.value.get(props.conversationId as number))
-            : await apiClient.get(endpoints.value.get())
+      props.mode === ROLE.HELPDESK_AGENT
+        ? await apiClient.get(endpoints.value.get(props.conversationId as number))
+        : await apiClient.get(endpoints.value.get())
 
     conversation.value = res.data
 
@@ -187,13 +183,12 @@ const sendMessage = async () => {
   sending.value = true
   try {
     const url =
-        props.mode === ROLE.HELPDESK_AGENT
-            ? endpoints.value.send(props.conversationId as number)
-            : endpoints.value.send()
+      props.mode === ROLE.HELPDESK_AGENT
+        ? endpoints.value.send(props.conversationId as number)
+        : endpoints.value.send()
 
     await apiClient.post(url, { content: message.value })
     message.value = ''
-
   } finally {
     sending.value = false
   }
@@ -209,7 +204,6 @@ const closeConversation = async () => {
   await loadConversation()
 }
 
-
 let currentEchoChannel: any = null
 let currentChannelName: string | null = null
 
@@ -224,36 +218,31 @@ const setupEcho = () => {
 
   currentChannelName = ch
 
-  currentEchoChannel = window.Echo
-      .channel(ch)
-      .listen('.message.sent', async (e: any) => {
-        if (!conversation.value) return
-        conversation.value.messages.push(e.message)
-        await nextTick()
-        scrollToBottom()
-      })
+  currentEchoChannel = window.Echo.channel(ch).listen('.message.sent', async (e: any) => {
+    if (!conversation.value) return
+    conversation.value.messages.push(e.message)
+    await nextTick()
+    scrollToBottom()
+  })
 }
 
-
+watch(
+  () => [props.mode, props.conversationId] as const,
+  async ([mode, id]) => {
+    if (mode === ROLE.HELPDESK_AGENT && !id) return
+    await loadConversation()
+  },
+  { immediate: true },
+)
 
 watch(
-    () => [props.mode, props.conversationId] as const,
-    async ([mode, id]) => {
-      if (mode === ROLE.HELPDESK_AGENT && !id) return
+  () => conversation.value?.status,
+  async (s) => {
+    if (props.mode === ROLE.USER && s === STATUS.CLOSED) {
       await loadConversation()
-    },
-    { immediate: true }
-)
-
-watch(
-    () => conversation.value?.status,
-    async (s) => {
-      if (props.mode === ROLE.USER && s === STATUS.CLOSED) {
-        await loadConversation()
-      }
     }
+  },
 )
-
 
 onUnmounted(() => {
   if (currentEchoChannel) {
@@ -263,8 +252,6 @@ onUnmounted(() => {
     window.Echo.leaveChannel(currentChannelName)
   }
 })
-
-
 </script>
 
 <style scoped>
@@ -292,7 +279,7 @@ onUnmounted(() => {
   overflow-y: auto;
   padding: 8px;
   border-radius: 12px;
-  background: rgba(0,0,0,0.02);
+  background: rgba(0, 0, 0, 0.02);
 }
 
 .chat-footer {
@@ -310,6 +297,6 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: rgba(0,0,0,0.6);
+  color: rgba(0, 0, 0, 0.6);
 }
 </style>

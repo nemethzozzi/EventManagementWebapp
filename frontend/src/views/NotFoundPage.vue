@@ -6,11 +6,7 @@
       <p class="nf-text">{{ $t('not_found.text') }}</p>
 
       <div class="nf-actions">
-        <Button
-            icon="pi pi-home"
-            :label="$t('not_found.go_home')"
-            @click="goHome"
-        />
+        <Button icon="pi pi-home" :label="$t('not_found.go_home')" @click="goHome" />
       </div>
     </div>
   </div>

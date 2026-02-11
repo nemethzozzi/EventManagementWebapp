@@ -1,9 +1,13 @@
 <template>
   <div class="mb-3 d-flex" :class="rowClass">
-    <div class="d-inline-block p-3 rounded" :class="bubbleClass" style="max-width: 70%">
+    <div
+      class="d-inline-block p-3 rounded bubble-shell"
+      :class="bubbleClass"
+      style="max-width: 70%"
+    >
       <div class="fw-bold small">{{ senderName }}</div>
       <div>{{ message.content }}</div>
-      <div class="text-muted small mt-1">{{ formatTime(message.created_at) }}</div>
+      <div class="bubble-time small mt-1">{{ formatTime(message.created_at) }}</div>
     </div>
   </div>
 </template>
@@ -70,11 +74,9 @@ const rowClass = computed(() => (isMine.value ? 'justify-content-end' : 'justify
  * Buborék osztályok
  */
 const bubbleClass = computed(() => {
-  // saját üzenet legyen "primary", a másik oldali meg külön szín
-  if (isMine.value) return 'bg-primary text-white'
-
-  if (props.message.sender_type === SENDER.BOT) return 'bg-light'
-  return 'bg-success text-white' // itt lehet pl bg-white border is, ha akarod
+  // saját üzenet más színnel
+  if (isMine.value) return 'bubble bubble--mine'
+  return 'bubble bubble--other'
 })
 
 /**
@@ -89,3 +91,43 @@ const formatTime = (dateString: string) => {
   })
 }
 </script>
+
+<style scoped>
+.bubble-shell {
+  border-radius: 14px;
+}
+
+.bubble {
+  background: var(--p-surface-0);
+  color: var(--p-text-color);
+  border: 1px solid var(--p-surface-200);
+}
+
+.bubble--mine {
+  background: var(--p-primary-color);
+  color: var(--p-primary-contrast-color);
+  border-color: color-mix(in srgb, var(--p-primary-color), #000 15%);
+}
+
+.bubble--other {
+  background: var(--p-surface-100);
+  color: var(--p-text-color);
+  border-color: var(--p-surface-200);
+}
+
+:deep(.bubble-time) {
+  color: var(--p-text-muted-color);
+}
+
+html.dark .bubble {
+  background: var(--p-surface-800);
+  color: var(--p-text-color);
+  border-color: var(--p-surface-700);
+}
+
+html.dark .bubble--mine {
+  background: var(--p-primary-color);
+  color: var(--p-text-color);
+  border-color: color-mix(in srgb, var(--p-primary-color), #000 15%);
+}
+</style>

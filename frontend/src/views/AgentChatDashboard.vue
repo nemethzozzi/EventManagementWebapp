@@ -2,8 +2,14 @@
   <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between mb-3">
       <h2>{{ $t('agent_dashboard.title') }}</h2>
+      <Button
+        severity="secondary"
+        icon="pi pi-arrow-left"
+        :label="$t('agent_dashboard.button.back')"
+        @click="goBack"
+        :outlined="true"
+      />
     </div>
-
     <div class="row">
       <!-- Beszélgetések listája -->
       <div class="col-md-4">
@@ -42,6 +48,9 @@ import { notify } from '../lib/notifyBus.ts'
 import { ROLE } from '../types/Role.ts'
 import ConversationList from '../components/ConversationList.vue'
 import type { Conversation } from '../types/Conversation.ts'
+import Button from 'primevue/button'
+import { ROUTES } from '../routes/routes.ts'
+import router from '../router'
 
 /**
  * Beszélgetések
@@ -57,6 +66,11 @@ const selectedConversationId = ref<number | null>(null)
  * Betöltés
  */
 const loading = ref(false)
+
+/**
+ * Visszanavigálás az események oldalra
+ */
+const goBack = () => router.push(ROUTES.EVENTS)
 
 /**
  * Beszélgetések betöltése

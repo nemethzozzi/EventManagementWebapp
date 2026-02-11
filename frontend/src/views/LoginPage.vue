@@ -52,7 +52,6 @@
             type="submit"
             class="w-full"
             :label="$t('login_page.login')"
-            icon="pi pi-check"
             :loading="loading"
             :disabled="loading"
           />

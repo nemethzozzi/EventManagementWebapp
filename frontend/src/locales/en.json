@@ -152,6 +152,9 @@
   "agent_dashboard": {
     "title": "Agent Dashboard",
     "choose_conversation": "Choose a conversation on the left side",
+    "button": {
+      "back": "Back"
+    },
     "conversations": {
       "title": "Active conversations",
       "empty": "No active conversations",

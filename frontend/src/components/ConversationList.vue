@@ -111,3 +111,70 @@ const statusText = (status: string) => {
   }
 }
 </script>
+
+<style scoped>
+.card {
+  background: var(--p-surface-0);
+  color: var(--p-text-color);
+  border-color: var(--p-surface-200);
+}
+
+.card-header {
+  background: color-mix(in srgb, var(--p-surface-0), var(--p-surface-100) 35%);
+  border-bottom-color: var(--p-surface-200);
+}
+
+.card-body {
+  background: transparent;
+}
+
+.card-body .card {
+  background: var(--p-surface-0);
+  border-color: var(--p-surface-200);
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    transform 120ms ease;
+}
+
+.card-body .card:hover {
+  background: color-mix(in srgb, var(--p-surface-0), var(--p-surface-100) 45%);
+  transform: translateY(-1px);
+}
+
+.card-body .card.border-primary {
+  border-color: var(--p-primary-color) !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--p-primary-color), transparent 70%);
+}
+
+:deep(.text-muted) {
+  color: var(--p-text-muted-color) !important;
+}
+
+.badge {
+  border: 1px solid color-mix(in srgb, currentColor, transparent 70%);
+}
+
+html.dark .card {
+  background: var(--p-surface-900);
+  border-color: var(--p-surface-700);
+}
+
+html.dark .card-header {
+  background: color-mix(in srgb, var(--p-surface-900), var(--p-surface-800) 35%);
+  border-bottom-color: var(--p-surface-700);
+}
+
+html.dark .card-body .card {
+  background: var(--p-surface-900);
+  border-color: var(--p-surface-700);
+}
+
+html.dark .card-body .card:hover {
+  background: color-mix(in srgb, var(--p-surface-900), var(--p-surface-800) 45%);
+}
+
+.small {
+  color: var(--p-text-color);
+}
+</style>

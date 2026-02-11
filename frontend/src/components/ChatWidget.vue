@@ -72,9 +72,13 @@ const toggle = () => {
   max-height: calc(100vh - 120px);
   z-index: 9998;
 
-  background: rgba(255, 255, 255, 0.92);
+  /* LIGHT */
+  background: color-mix(in srgb, var(--p-surface-0), transparent 8%);
+  border: 1px solid var(--p-surface-200);
+  color: var(--p-text-color);
+
+  /* glassy */
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 16px;
   overflow: hidden;
 
@@ -86,6 +90,15 @@ const toggle = () => {
   flex-direction: column;
 }
 
+/* DARK */
+html.dark .chat-box {
+  background: color-mix(in srgb, var(--p-surface-900), transparent 10%);
+  border-color: var(--p-surface-700);
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.55),
+    0 10px 26px rgba(0, 0, 0, 0.35);
+}
+
 .chat-box-header {
   padding: 12px 12px 12px 14px;
   display: flex;
@@ -93,13 +106,18 @@ const toggle = () => {
   justify-content: space-between;
   gap: 12px;
 
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid var(--p-surface-200);
+}
+
+html.dark .chat-box-header {
+  border-bottom-color: var(--p-surface-700);
 }
 
 .chat-box-header .left {
   display: flex;
   align-items: center;
   gap: 10px;
+  color: var(--p-text-color);
 }
 
 .chat-box-header .title {

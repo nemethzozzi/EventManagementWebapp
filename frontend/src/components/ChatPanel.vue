@@ -260,10 +260,16 @@ onUnmounted(() => {
   min-height: 0;
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
+/* Top bar */
 .chat-top {
   flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .chat-top .title {
@@ -271,20 +277,32 @@ onUnmounted(() => {
   align-items: center;
   gap: 10px;
   font-weight: 700;
+  color: var(--p-text-color);
 }
 
+/* Body */
 .chat-body {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  padding: 8px;
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.02);
+
+  padding: 10px;
+  border-radius: 14px;
+
+  /* LIGHT: szép, világos “panel” */
+  background: var(--p-surface-50);
+  border: 1px solid var(--p-surface-200);
 }
 
+/* Dark mód: legyen sötétebb panel + border */
+html.dark .chat-body {
+  background: var(--p-surface-900);
+  border-color: var(--p-surface-700);
+}
+
+/* Footer */
 .chat-footer {
   flex: 0 0 auto;
-  padding-top: 6px;
 }
 
 .chat-form {
@@ -293,10 +311,24 @@ onUnmounted(() => {
   align-items: center;
 }
 
+/* Closed state */
 .chat-closed {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  color: rgba(0, 0, 0, 0.6);
+
+  padding: 10px;
+  border-radius: 12px;
+
+  background: var(--p-surface-50);
+  border: 1px solid var(--p-surface-200);
+  color: var(--p-text-muted-color);
+}
+
+html.dark .chat-closed {
+  background: var(--p-surface-900);
+  border-color: var(--p-surface-700);
+  color: var(--p-text-muted-color);
 }
 </style>

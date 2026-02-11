@@ -152,6 +152,9 @@
   "agent_dashboard": {
     "title": "Agent Dashboard",
     "choose_conversation": "Válassz egy beszélgetést a bal oldalon",
+    "button": {
+      "back": "Vissza"
+    },
     "conversations": {
       "title": "Aktív beszélgetések",
       "empty": "Nincs aktív beszélgetés",

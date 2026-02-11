@@ -62,6 +62,9 @@ const loading = ref(false)
  */
 const currentUserId = computed(() => currentUser.value?.id ?? null)
 
+/**
+ * Visszanavigálás az események oldalra
+ */
 const goBack = () => router.push(ROUTES.EVENTS)
 
 /**

@@ -3,7 +3,7 @@
     <div class="nav-inner">
       <RouterLink :to="ROUTES.EVENTS" class="brand">
         <i class="pi pi-calendar"></i>
-        <span>UCC</span>
+        <span>Event Manager</span>
       </RouterLink>
 
       <div class="nav-actions">
@@ -25,8 +25,7 @@
           v-if="isAgentOrAdmin"
           :label="$t('nav.agent_dashboard')"
           icon="pi pi-headphones"
-          severity="secondary"
-          :outlined="true"
+          severity="info"
           @click="go(ROUTES.AGENT_DASHBOARD)"
         />
 
@@ -35,7 +34,6 @@
           :label="$t('nav.admin')"
           icon="pi pi-cog"
           severity="warning"
-          :outlined="true"
           @click="go(ROUTES.ADMIN)"
         />
 
@@ -110,9 +108,8 @@ watch(selectedLocale, (l) => setLocale(l), { immediate: true })
   position: sticky;
   top: 0;
   z-index: 50;
-  backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.75);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .nav-inner {
@@ -131,7 +128,7 @@ watch(selectedLocale, (l) => setLocale(l), { immediate: true })
   gap: 10px;
   font-weight: 800;
   text-decoration: none;
-  color: inherit;
+  color: #111;
 }
 
 .brand i {
@@ -145,9 +142,17 @@ watch(selectedLocale, (l) => setLocale(l), { immediate: true })
   flex-wrap: wrap;
 }
 
-:global(html.dark) .nav-shell {
-  background: rgba(15, 15, 15, 0.72);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+.lang-select {
+  min-width: 160px;
+}
+
+:global(html.dark .nav-shell) {
+  background: #000000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+:global(html.dark .brand) {
+  color: rgba(255, 255, 255, 0.92);
 }
 
 :global(html.dark) .brand {
